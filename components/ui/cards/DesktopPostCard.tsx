@@ -28,12 +28,12 @@ export default function DesktopPostCard({ post, featured = false }: DesktopPostC
               className="object-cover transition-transform duration-700 group-hover:scale-105"
               sizes="(max-width: 1200px) 100vw, 1200px"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent" />
           </div>
         )}
         
         {/* Content */}
-        <div className="relative p-8 h-[500px] flex flex-col justify-end">
+        <div className="relative p-8 h-125 flex flex-col justify-end">
           {/* Category Badge */}
           {primaryCategory && (
             <Link 
@@ -120,7 +120,7 @@ export default function DesktopPostCard({ post, featured = false }: DesktopPostC
           )}
         </div>
       ) : (
-        <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+        <div className="h-48 bg-linear-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
           <div className="text-4xl opacity-30">📝</div>
         </div>
       )}
@@ -154,7 +154,7 @@ export default function DesktopPostCard({ post, featured = false }: DesktopPostC
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-border">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold">
+            <div className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold">
               {post.author?.node?.name?.charAt(0) || 'U'}
             </div>
             <span className="text-sm text-text-secondary">

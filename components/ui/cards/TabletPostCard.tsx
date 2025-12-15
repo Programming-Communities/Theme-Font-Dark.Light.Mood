@@ -20,7 +20,7 @@ export default function TabletPostCard({ post, compact = false }: TabletPostCard
       <div className="group flex items-center gap-4 p-4 border border-border rounded-xl transition-all hover:border-primary/30 hover:shadow-lg">
         {/* Image */}
         {post.featuredImage?.node?.sourceUrl ? (
-          <div className="relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden">
+          <div className="relative shrink-0 w-24 h-24 rounded-lg overflow-hidden">
             <Image
               src={post.featuredImage.node.sourceUrl}
               alt={post.featuredImage.node.altText || post.title}
@@ -30,7 +30,7 @@ export default function TabletPostCard({ post, compact = false }: TabletPostCard
             />
           </div>
         ) : (
-          <div className="flex-shrink-0 w-24 h-24 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+          <div className="shrink-0 w-24 h-24 rounded-lg bg-linear-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
             <div className="text-2xl opacity-30">📝</div>
           </div>
         )}
@@ -101,7 +101,7 @@ export default function TabletPostCard({ post, compact = false }: TabletPostCard
           )}
         </div>
       ) : (
-        <div className="h-40 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+        <div className="h-40 bg-linear-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
           <div className="text-3xl opacity-30">📝</div>
         </div>
       )}

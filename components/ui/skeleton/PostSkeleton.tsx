@@ -13,7 +13,7 @@ export default function PostSkeleton({ count = 1, variant = 'card' }: PostSkelet
   const SkeletonCard = () => (
     <div className="bg-surface border border-border rounded-xl overflow-hidden">
       {/* Image Skeleton */}
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-secondary/5">
+      <div className="relative h-48 overflow-hidden bg-linear-to-br from-primary/5 to-secondary/5">
         <div className="absolute inset-0 animate-pulse" 
              style={{ backgroundColor: themeColors.border + '40' }} />
       </div>
@@ -67,7 +67,7 @@ export default function PostSkeleton({ count = 1, variant = 'card' }: PostSkelet
     <div className="py-4 border-b border-border last:border-b-0">
       <div className="flex gap-4">
         {/* Image Skeleton */}
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <div className="w-24 h-24 rounded-lg animate-pulse" 
                style={{ backgroundColor: themeColors.border + '40' }} />
         </div>

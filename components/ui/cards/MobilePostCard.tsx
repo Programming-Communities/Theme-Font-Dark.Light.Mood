@@ -67,7 +67,7 @@ export default function MobilePostCard({ post, showImage = true }: MobilePostCar
             sizes="(max-width: 480px) 100vw, 300px"
           />
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
           
           {/* Category Badge */}
           {primaryCategory && (
