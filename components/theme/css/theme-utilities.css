@@ -1,0 +1,207 @@
+/* Theme CSS Variables */
+:root {
+  /* Default to Primary Dark Blue theme */
+  --primary: #194375;
+  --secondary: #1f7190;
+  --background: #0a1929;
+  --surface: #0f2942;
+  --text-primary: #e6f0ff;
+  --text-secondary: #b3ccff;
+  --text-accent: #0a1929;
+  --border: #2a4a6b;
+  --success: #10b981;
+  --warning: #f5be2e;
+  --error: #ef4444;
+  --shadow: 0 4px 12px rgba(25, 67, 117, 0.3);
+  --font-family: system-ui;
+}
+
+/* Dark mode variables */
+.dark {
+  /* Enhanced dark mode for Primary Dark Blue */
+  --primary: #2563eb;
+  --secondary: #1f7190;
+  --background: #051322;
+  --surface: #0a1f35;
+  --text-primary: #f0f7ff;
+  --text-secondary: #c2d6ff;
+  --text-accent: #051322;
+  --border: #1e3a5f;
+  --success: #10b981;
+  --warning: #f5be2e;
+  --error: #ef4444;
+  --shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* Light mode override for light themes */
+.light {
+  /* Light mode variables will be set by theme config */
+  /* This rule is intentionally empty as it gets populated dynamically */
+}
+
+/* Theme utilities */
+.theme-transition {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Modal styles */
+.theme-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.theme-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  z-index: 1001;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow);
+}
+
+.font-modal {
+  min-width: 400px;
+}
+
+.theme-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.theme-modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+  background-color: var(--surface);
+}
+
+/* Font options */
+.font-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.font-option {
+  padding: 12px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.font-option:hover {
+  border-color: var(--primary);
+  background: var(--surface);
+}
+
+.font-option.active {
+  border-color: var(--primary);
+  background: var(--surface);
+}
+
+.font-preview {
+  font-size: 0.75rem;
+  margin-top: 8px;
+  opacity: 0.7;
+  line-height: 1.2;
+}
+
+/* Floating buttons */
+.floating-theme-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.font-selector-btn {
+  bottom: 88px;
+}
+
+.dark-mode-toggle {
+  bottom: 152px;
+}
+
+.floating-theme-btn:hover {
+  transform: scale(1.1);
+}
+
+.floating-theme-btn:active {
+  transform: scale(0.95);
+}
+
+/* Sun/Moon toggle animation */
+@keyframes sunRise {
+  0% { transform: translateY(100%) rotate(0deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+
+@keyframes moonRise {
+  0% { transform: translateY(-100%) rotate(0deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+
+.sun-icon {
+  animation: sunRise 0.5s ease-out;
+}
+
+.moon-icon {
+  animation: moonRise 0.5s ease-out;
+}
+
+/* Prevent dark reader interference */
+[data-darkreader-inline-bgcolor],
+[data-darkreader-inline-bgimage],
+[data-darkreader-inline-color],
+[data-darkreader-inline-stroke],
+[data-darkreader-inline-fill] {
+  all: unset !important;
+}
+
+html[data-darkreader-mode],
+html[data-darkreader-scheme] {
+  --darkreader-bg--surface: unset !important;
+  --darkreader-text--primary: unset !important;
+  --darkreader-text--secondary: unset !important;
+}

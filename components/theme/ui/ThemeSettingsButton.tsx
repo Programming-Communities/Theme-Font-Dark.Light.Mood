@@ -1,0 +1,346 @@
+'use client';
+
+import { useTheme } from '@/components/theme/contexts/ThemeContext';
+import { useState, useEffect } from 'react';
+import { 
+  Palette, 
+  Type, 
+  Moon, 
+  Sun,
+  X,
+  Settings,
+  ChevronRight,
+  Check
+} from 'lucide-react';
+
+const ThemeSettingsButton = () => {
+  const { 
+    theme, 
+    setTheme, 
+    availableThemes, 
+    availableFonts, 
+    fontFamily, 
+    setFontFamily,
+    isDarkMode,
+    toggleDarkMode
+  } = useTheme();
+  
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState<'main' | 'themes' | 'fonts'>('main');
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
+  const isPrimaryDarkBlueTheme = theme === 'primary-dark-blue';
+
+  return (
+    <>
+      {/* Main Settings Button - Bottom Most */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 group"
+        title="Theme Settings"
+        style={{
+          background: `linear-gradient(135deg, var(--primary), var(--secondary))`,
+          color: 'var(--text-accent)',
+          border: '2px solid var(--border)'
+        }}
+      >
+        <Settings className="h-6 w-6" />
+        
+        {/* Tooltip */}
+        <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 px-2 py-1 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+             style={{
+               backgroundColor: 'var(--surface)',
+               color: 'var(--text-primary)',
+               border: '1px solid var(--border)'
+             }}>
+          Theme Settings
+        </div>
+      </button>
+
+      {/* Side Menu Modal */}
+      {isOpen && (
+        <>
+          {/* Overlay */}
+          <div 
+            className="fixed inset-0 bg-black/50 z-1000 backdrop-blur-sm"
+            onClick={() => setIsOpen(false)}
+          />
+          
+          {/* Side Menu */}
+          <div 
+            className="fixed top-0 right-0 h-full w-80 z-1001 transform transition-transform duration-300 ease-out"
+            style={{ 
+              transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+              backgroundColor: 'var(--background)',
+              borderLeft: '1px solid var(--border)',
+              boxShadow: 'var(--shadow)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="p-4 border-b" style={{ borderColor: 'var(--border)' }}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Settings className="h-5 w-5" style={{ color: 'var(--primary)' }} />
+                  <h3 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
+                    Theme Settings
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 rounded-lg hover:opacity-80 transition-opacity"
+                  style={{ 
+                    color: 'var(--text-secondary)',
+                    backgroundColor: 'var(--surface)'
+                  }}
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="h-[calc(100vh-64px)] overflow-y-auto p-4">
+              {/* Main Menu */}
+              {activeSection === 'main' && (
+                <div className="space-y-3">
+                  {/* Dark/Light Mode Toggle */}
+                  <button
+                    onClick={toggleDarkMode}
+                    className="w-full p-4 rounded-lg flex items-center justify-between transition-all hover:opacity-90 group"
+                    style={{ 
+                      backgroundColor: 'var(--surface)',
+                      color: 'var(--text-primary)',
+                      border: '1px solid var(--border)'
+                    }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg relative overflow-hidden" 
+                           style={{ backgroundColor: 'var(--primary)', color: 'var(--text-accent)' }}>
+                        {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                        {/* Animated background for toggle effect */}
+                        <div className={`absolute inset-0 transition-transform duration-300 ${isDarkMode ? 'translate-y-0' : 'translate-y-full'}`}
+                             style={{ backgroundColor: 'var(--secondary)' }} />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-medium">Dark Mode</div>
+                        <div className="text-sm opacity-75">
+                          {isDarkMode ? 'Night Mode Active' : 'Day Mode Active'}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className={`w-10 h-6 rounded-full flex items-center p-1 transition-all duration-300 ${isDarkMode ? 'justify-end' : 'justify-start'}`}
+                        style={{ backgroundColor: isDarkMode ? 'var(--primary)' : 'var(--border)' }}
+                      >
+                        <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--background)' }}>
+                          {isDarkMode ? (
+                            <Moon className="h-2 w-2" style={{ color: 'var(--primary)' }} />
+                          ) : (
+                            <Sun className="h-2 w-2" style={{ color: 'var(--warning)' }} />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Themes Option */}
+                  <button
+                    onClick={() => setActiveSection('themes')}
+                    className="w-full p-4 rounded-lg flex items-center justify-between transition-all hover:opacity-90"
+                    style={{ 
+                      backgroundColor: 'var(--surface)',
+                      color: 'var(--text-primary)',
+                      border: '1px solid var(--border)'
+                    }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--primary)', color: 'var(--text-accent)' }}>
+                        <Palette className="h-4 w-4" />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-medium">Themes</div>
+                        <div className="text-sm opacity-75">
+                          {availableThemes.find(t => t.value === theme)?.label || 'Select theme'}
+                        </div>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 opacity-75" />
+                  </button>
+
+                  {/* Fonts Option */}
+                  <button
+                    onClick={() => setActiveSection('fonts')}
+                    className="w-full p-4 rounded-lg flex items-center justify-between transition-all hover:opacity-90"
+                    style={{ 
+                      backgroundColor: 'var(--surface)',
+                      color: 'var(--text-primary)',
+                      border: '1px solid var(--border)'
+                    }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--success)', color: 'var(--text-accent)' }}>
+                        <Type className="h-4 w-4" />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-medium">Fonts</div>
+                        <div className="text-sm opacity-75">
+                          {availableFonts.find(f => f.value === fontFamily)?.label || 'Select font'}
+                        </div>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 opacity-75" />
+                  </button>
+                </div>
+              )}
+
+              {/* Themes Section */}
+              {activeSection === 'themes' && (
+                <div>
+                  {/* Back Button */}
+                  <button
+                    onClick={() => setActiveSection('main')}
+                    className="mb-4 flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity"
+                    style={{ color: 'var(--primary)' }}
+                  >
+                    ← Back to Settings
+                  </button>
+
+                  <h4 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                    Select Theme
+                  </h4>
+
+                  <div className="space-y-3">
+                    {availableThemes.map((themeOption) => (
+                      <button
+                        key={themeOption.value}
+                        onClick={() => {
+                          setTheme(themeOption.value);
+                          setActiveSection('main');
+                        }}
+                        className={`w-full p-4 rounded-lg flex items-center justify-between transition-all ${theme === themeOption.value ? 'border-2' : 'border hover:border-2'}`}
+                        style={{ 
+                          backgroundColor: theme === themeOption.value ? 'var(--surface)' : 'var(--background)',
+                          borderColor: theme === themeOption.value ? 'var(--primary)' : 'var(--border)',
+                          color: 'var(--text-primary)'
+                        }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div 
+                            className="w-8 h-8 rounded-full border-2 relative overflow-hidden"
+                            style={{ 
+                              borderColor: 'var(--background)',
+                              background: `linear-gradient(135deg, ${
+                                themeOption.value === 'primary-dark-blue' ? '#194375' :
+                                themeOption.value.includes('blue') ? '#2563EB' : 
+                                themeOption.value.includes('green') ? '#059669' : 
+                                themeOption.value.includes('purple') ? '#7C3AED' : 
+                                themeOption.value.includes('gold') ? '#D97706' : 
+                                themeOption.value.includes('gray') ? '#4B5563' : '#06B6D4'
+                              }, ${
+                                themeOption.value === 'primary-dark-blue' ? '#1f7190' :
+                                themeOption.value.includes('blue') ? '#1E40AF' : 
+                                themeOption.value.includes('green') ? '#047857' : 
+                                themeOption.value.includes('purple') ? '#6D28D9' : 
+                                themeOption.value.includes('gold') ? '#B45309' : 
+                                themeOption.value.includes('gray') ? '#374151' : '#0891B2'
+                              })` 
+                            }}
+                          >
+                            {themeOption.value === 'primary-dark-blue' && (
+                              <div className="absolute bottom-0 left-0 right-0 h-2 bg-linear-to-r from-[#f5be2e] to-[#ffd966]" />
+                            )}
+                          </div>
+                          <div className="text-left">
+                            <div className="font-medium">
+                              {themeOption.label}
+                            </div>
+                            <div className="text-xs opacity-75">
+                              {themeOption.category === 'professional' ? 'Professional' : 
+                               themeOption.category === 'premium' ? 'Premium' : 
+                               themeOption.category === 'minimal' ? 'Minimal' : 
+                               themeOption.category === 'tech' ? 'Tech' :
+                               themeOption.category === 'nature' ? 'Nature' : 'Creative'}
+                            </div>
+                          </div>
+                        </div>
+                        {theme === themeOption.value && (
+                          <Check className="h-5 w-5" style={{ color: 'var(--primary)' }} />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Fonts Section */}
+              {activeSection === 'fonts' && (
+                <div>
+                  {/* Back Button */}
+                  <button
+                    onClick={() => setActiveSection('main')}
+                    className="mb-4 flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity"
+                    style={{ color: 'var(--primary)' }}
+                  >
+                    ← Back to Settings
+                  </button>
+
+                  <h4 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                    Select Font Family
+                  </h4>
+
+                  <div className="space-y-3">
+                    {availableFonts.map((font) => (
+                      <button
+                        key={font.value}
+                        onClick={() => {
+                          setFontFamily(font.value);
+                          setActiveSection('main');
+                        }}
+                        className={`w-full p-4 rounded-lg flex items-center justify-between transition-all ${fontFamily === font.value ? 'border-2' : 'border hover:border-2'}`}
+                        style={{ 
+                          fontFamily: font.value,
+                          backgroundColor: fontFamily === font.value ? 'var(--surface)' : 'var(--background)',
+                          borderColor: fontFamily === font.value ? 'var(--primary)' : 'var(--border)',
+                          color: 'var(--text-primary)'
+                        }}
+                      >
+                        <div className="text-left flex-1">
+                          <div className="font-medium">
+                            {font.label}
+                          </div>
+                          <div 
+                            className="text-xs mt-1 opacity-75" 
+                            style={{ 
+                              fontFamily: font.value
+                            }}
+                          >
+                            The quick brown fox jumps over the lazy dog
+                          </div>
+                        </div>
+                        {fontFamily === font.value && (
+                          <Check className="h-5 w-5 ml-2" style={{ color: 'var(--primary)' }} />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+export default ThemeSettingsButton;
