@@ -1,7 +1,7 @@
 'use client';
 
 import useSWR, { SWRConfiguration } from 'swr';
-import { WordPressClient } from '@/lib/wordpress';
+import { WordPressClient } from '@/lib/wordpress/client';
 import { Post, Category, Tag, Comment, User, WordPressQueryParams } from '@/types/wordpress';
 
 const wordpressClient = new WordPressClient();

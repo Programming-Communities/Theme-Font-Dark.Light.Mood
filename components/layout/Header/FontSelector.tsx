@@ -201,7 +201,7 @@ const FontSelector: React.FC = () => {
           aria-label="Select font family"
         >
           <div className="flex items-center space-x-3">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ 
                 backgroundColor: 'var(--primary-light)', 
                 color: 'var(--primary)' 
@@ -319,7 +319,7 @@ const FontSelector: React.FC = () => {
                           </div>
                           
                           {/* Popularity Indicator */}
-                          <div className="flex-shrink-0 ml-4">
+                          <div className="shrink-0 ml-4">
                             <div className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
                               {font.popularity}%
                             </div>

@@ -1,9 +1,10 @@
-// FIXED VERSION:
+// next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // swcMinify: true, // REMOVE - deprecated
+  // Remove swcMinify as it's deprecated in Next.js 13+
+  // swcMinify: true, // REMOVE THIS LINE
   experimental: {
     optimizeCss: true,
   },

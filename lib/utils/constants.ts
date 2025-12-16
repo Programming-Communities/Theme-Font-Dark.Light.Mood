@@ -1,4 +1,302 @@
-// File 45: lib/utils/constants.ts (Continued)
+// File: lib/utils/constants.ts
+// COMPLETE FILE WITH ALL ERRORS FIXED
+
+/**
+ * WordPress API Constants
+ */
+export const WORDPRESS_CONSTANTS = {
+  API: {
+    BASE_URL: process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'http://localhost/wp-json',
+    GRAPHQL_URL: process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL || 'http://localhost/graphql',
+    REST_VERSION: 'wp/v2',
+    NONCE_HEADER: 'X-WP-Nonce',
+  },
+  ENDPOINTS: {
+    POSTS: '/wp/v2/posts',
+    PAGES: '/wp/v2/pages',
+    CATEGORIES: '/wp/v2/categories',
+    TAGS: '/wp/v2/tags',
+    USERS: '/wp/v2/users',
+    MEDIA: '/wp/v2/media',
+    COMMENTS: '/wp/v2/comments',
+    SETTINGS: '/wp/v2/settings',
+  },
+  QUERY_PARAMS: {
+    PER_PAGE: 'per_page',
+    PAGE: 'page',
+    SEARCH: 'search',
+    CATEGORIES: 'categories',
+    TAGS: 'tags',
+    AUTHOR: 'author',
+    ORDER: 'order',
+    ORDERBY: 'orderby',
+    STATUS: 'status',
+  },
+  POST_STATUS: {
+    PUBLISH: 'publish',
+    DRAFT: 'draft',
+    PENDING: 'pending',
+    PRIVATE: 'private',
+    TRASH: 'trash',
+  },
+  POST_TYPES: {
+    POST: 'post',
+    PAGE: 'page',
+    ATTACHMENT: 'attachment',
+    REVISION: 'revision',
+  },
+  USER_ROLES: {
+    ADMINISTRATOR: 'administrator',
+    EDITOR: 'editor',
+    AUTHOR: 'author',
+    CONTRIBUTOR: 'contributor',
+    SUBSCRIBER: 'subscriber',
+  },
+} as const;
+
+/**
+ * Theme Constants
+ */
+export const THEME_CONSTANTS = {
+  THEMES: [
+    'professional-blue',
+    'corporate-green', 
+    'premium-purple',
+    'luxury-gold',
+    'minimal-gray',
+    'tech-cyan',
+    'nature-green',
+    'ocean-blue',
+    'sunset-orange',
+    'midnight-purple',
+    'rose-pink',
+    'vibrant-red',
+    'cool-teal',
+    'classic-white',
+  ] as const,
+  COLOR_MODES: {
+    LIGHT: 'light',
+    DARK: 'dark',
+    AUTO: 'auto',
+  } as const,
+  FONT_FAMILIES: [
+    'Inter',
+    'Poppins', 
+    'Roboto',
+    'Open Sans',
+    'Montserrat',
+    'Lato',
+    'Source Sans Pro',
+    'Merriweather',
+    'Playfair Display',
+    'Nunito',
+  ] as const,
+  DEFAULT_THEME: 'professional-blue',
+  DEFAULT_COLOR_MODE: 'light',
+  DEFAULT_FONT: 'Inter',
+  LOCAL_STORAGE_KEYS: {
+    THEME: 'ecpk-theme',
+    COLOR_MODE: 'ecpk-color-mode',
+    FONT: 'ecpk-font',
+  },
+} as const;
+
+/**
+ * SEO Constants
+ */
+export const SEO_CONSTANTS = {
+  DEFAULT_TITLE: 'English Communities PK - English Learning Platform',
+  DEFAULT_DESCRIPTION: 'Join English Communities PK to learn English, connect with learners, and access valuable resources for English language proficiency.',
+  DEFAULT_KEYWORDS: ['English Learning', 'Pakistan', 'Language Learning', 'English Communities', 'Education'],
+  DEFAULT_IMAGE: '/images/seo-default.jpg',
+  SITE_NAME: 'English Communities PK',
+  TWITTER_HANDLE: '@EnglishCommPK',
+  FACEBOOK_PAGE: 'EnglishCommunitiesPK',
+  LOCALE: 'en_PK',
+  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+  AUTHOR: 'English Communities PK Team',
+  PUBLISHER: 'English Communities PK',
+  COPYRIGHT: `© ${new Date().getFullYear()} English Communities PK. All rights reserved.`,
+  ROBOTS: {
+    INDEX: true,
+    FOLLOW: true,
+    NOARCHIVE: false,
+    NOSNIPPET: false,
+    NOIMAGEINDEX: false,
+    NOTRANSLATE: false,
+  },
+} as const;
+
+/**
+ * Ad Constants
+ */
+export const AD_CONSTANTS = {
+  PROVIDERS: {
+    GOOGLE_AD_SENSE: 'google-adsense',
+    AD_UNITS: 'ad-units',
+    CUSTOM: 'custom',
+  },
+  AD_SIZES: {
+    LEADERBOARD: [728, 90],
+    MEDIUM_RECTANGLE: [300, 250],
+    LARGE_RECTANGLE: [336, 280],
+    BANNER: [468, 60],
+    HALF_PAGE: [300, 600],
+    SKYSCRAPER: [120, 600],
+    WIDE_SKYSCRAPER: [160, 600],
+    MOBILE_BANNER: [320, 50],
+    LARGE_MOBILE_BANNER: [320, 100],
+  },
+  AD_POSITIONS: {
+    HEADER: 'header',
+    SIDEBAR_TOP: 'sidebar-top',
+    SIDEBAR_MIDDLE: 'sidebar-middle',
+    SIDEBAR_BOTTOM: 'sidebar-bottom',
+    CONTENT_TOP: 'content-top',
+    CONTENT_MIDDLE: 'content-middle',
+    CONTENT_BOTTOM: 'content-bottom',
+    FOOTER: 'footer',
+    IN_ARTICLE: 'in-article',
+    BETWEEN_POSTS: 'between-posts',
+  },
+  DEFAULT_AD_CONFIG: {
+    enabled: false,
+    provider: 'google-adsense',
+    clientId: '',
+    slots: {},
+    targeting: {},
+    frequency: 3,
+    respectPrivacy: true,
+  },
+} as const;
+
+/**
+ * Auth Constants
+ */
+export const AUTH_CONSTANTS = {
+  ROLES: {
+    ADMIN: 'admin',
+    EDITOR: 'editor',
+    AUTHOR: 'author',
+    CONTRIBUTOR: 'contributor',
+    SUBSCRIBER: 'subscriber',
+    GUEST: 'guest',
+  } as const,
+  PERMISSIONS: {
+    READ_POSTS: 'read_posts',
+    CREATE_POSTS: 'create_posts',
+    EDIT_POSTS: 'edit_posts',
+    DELETE_POSTS: 'delete_posts',
+    MANAGE_CATEGORIES: 'manage_categories',
+    MANAGE_TAGS: 'manage_tags',
+    MANAGE_COMMENTS: 'manage_comments',
+    MANAGE_USERS: 'manage_users',
+    MANAGE_SETTINGS: 'manage_settings',
+  },
+  TOKEN: {
+    ACCESS_TOKEN_KEY: 'ecpk-access-token',
+    REFRESH_TOKEN_KEY: 'ecpk-refresh-token',
+    EXPIRY_KEY: 'ecpk-token-expiry',
+    USER_KEY: 'ecpk-user',
+  },
+  ENDPOINTS: {
+    LOGIN: '/api/auth/login',
+    REGISTER: '/api/auth/register',
+    LOGOUT: '/api/auth/logout',
+    REFRESH: '/api/auth/refresh',
+    PROFILE: '/api/auth/profile',
+    FORGOT_PASSWORD: '/api/auth/forgot-password',
+    RESET_PASSWORD: '/api/auth/reset-password',
+  },
+} as const;
+
+/**
+ * Content Constants
+ */
+export const CONTENT_CONSTANTS = {
+  CATEGORIES: {
+    LANGUAGE_LEARNING: 'language-learning',
+    GRAMMAR: 'grammar',
+    VOCABULARY: 'vocabulary',
+    SPEAKING: 'speaking',
+    LISTENING: 'listening',
+    READING: 'reading',
+    WRITING: 'writing',
+    CULTURE: 'culture',
+    TIPS: 'tips',
+    RESOURCES: 'resources',
+  },
+  TAGS: {
+    BEGINNER: 'beginner',
+    INTERMEDIATE: 'intermediate',
+    ADVANCED: 'advanced',
+    KIDS: 'kids',
+    ADULTS: 'adults',
+    BUSINESS: 'business',
+    ACADEMIC: 'academic',
+    CONVERSATION: 'conversation',
+    EXAM: 'exam',
+  },
+  CONTENT_TYPES: {
+    ARTICLE: 'article',
+    TUTORIAL: 'tutorial',
+    GUIDE: 'guide',
+    RESOURCE: 'resource',
+    EXERCISE: 'exercise',
+    QUIZ: 'quiz',
+    VIDEO: 'video',
+    PODCAST: 'podcast',
+    EBOOK: 'ebook',
+    TOOL: 'tool',
+  },
+  FORMATS: {
+    STANDARD: 'standard',
+    VIDEO: 'video',
+    AUDIO: 'audio',
+    GALLERY: 'gallery',
+    LINK: 'link',
+    QUOTE: 'quote',
+    STATUS: 'status',
+  },
+} as const;
+
+/**
+ * Media Constants
+ */
+export const MEDIA_CONSTANTS = {
+  IMAGE_SIZES: {
+    THUMBNAIL: 'thumbnail',
+    MEDIUM: 'medium',
+    MEDIUM_LARGE: 'medium_large',
+    LARGE: 'large',
+    FULL: 'full',
+    CUSTOM: 'custom',
+  },
+  DEFAULT_SIZES: {
+    THUMBNAIL: [150, 150],
+    MEDIUM: [300, 200],
+    MEDIUM_LARGE: [768, 0],
+    LARGE: [1024, 0],
+  },
+  QUALITY: {
+    LOW: 60,
+    MEDIUM: 75,
+    HIGH: 90,
+  },
+  ALLOWED_TYPES: {
+    IMAGES: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
+    VIDEOS: ['video/mp4', 'video/webm', 'video/ogg'],
+    AUDIO: ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm'],
+    DOCUMENTS: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  },
+  MAX_FILE_SIZE: {
+    IMAGE: 5 * 1024 * 1024, // 5MB
+    VIDEO: 50 * 1024 * 1024, // 50MB
+    AUDIO: 10 * 1024 * 1024, // 10MB
+    DOCUMENT: 10 * 1024 * 1024, // 10MB
+  },
+} as const;
+
 /**
  * Cache & Performance Constants
  */
