@@ -1,0 +1,57 @@
+/* styles/theme.css - PREVIEW OF 14 THEMES STRUCTURE */
+
+:root {
+  /* Base theme (professional-blue) */
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: #93c5fd;
+  --secondary: #10b981;
+  --secondary-dark: #059669;
+  --secondary-light: #34d399;
+  --background: #ffffff;
+  --surface: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode override */
+.dark {
+  --primary: #60a5fa;
+  --primary-dark: #3b82f6;
+  --primary-light: #93c5fd;
+  --secondary: #34d399;
+  --secondary-dark: #10b981;
+  --secondary-light: #6ee7b7;
+  --background: #111827;
+  --surface: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --border: #374151;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --error: #f87171;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Theme classes for all 14 themes */
+.theme-professional-blue {
+  --primary: #3b82f6;
+  --secondary: #10b981;
+}
+
+.theme-corporate-green {
+  --primary: #059669;
+  --secondary: #3b82f6;
+}
+
+.theme-premium-purple {
+  --primary: #7c3aed;
+  --secondary: #ec4899;
+}
+
+/* ... and 11 more themes following the same pattern */
