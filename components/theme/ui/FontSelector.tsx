@@ -21,28 +21,18 @@ const FontSelector = () => {
 
   return (
     <>
-      {/* Font Selector Button - Positioned between DarkModeToggle and ThemeSettingsButton */}
+      {/* Font Selector Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-24 right-6 z-50 p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 group"
+        className="fixed bottom-24 right-6 z-50 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
         title="Change Font"
         style={{
           backgroundColor: 'var(--surface)',
           color: 'var(--text-primary)',
-          border: '2px solid var(--border)'
+          border: '1px solid var(--border)'
         }}
       >
         <Type className="h-5 w-5" />
-        
-        {/* Tooltip */}
-        <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 px-2 py-1 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
-             style={{
-               backgroundColor: 'var(--surface)',
-               color: 'var(--text-primary)',
-               border: '1px solid var(--border)'
-             }}>
-          Change Font Family
-        </div>
       </button>
 
       {/* Font Modal */}

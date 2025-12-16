@@ -30,18 +30,6 @@ const config: Config = {
       },
       animation: {
         'theme-pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'sun-rise': 'sunRise 0.5s ease-out',
-        'moon-rise': 'moonRise 0.5s ease-out',
-      },
-      keyframes: {
-        sunRise: {
-          '0%': { transform: 'translateY(100%) rotate(0deg)' },
-          '100%': { transform: 'translateY(0) rotate(360deg)' },
-        },
-        moonRise: {
-          '0%': { transform: 'translateY(-100%) rotate(0deg)' },
-          '100%': { transform: 'translateY(0) rotate(360deg)' },
-        },
       },
       zIndex: {
         '1000': '1000',

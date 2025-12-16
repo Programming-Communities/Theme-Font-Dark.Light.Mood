@@ -11,8 +11,7 @@ export type Theme =
   | 'midnight-purple'
   | 'rose-pink'
   | 'vibrant-red'
-  | 'cool-teal'
-  | 'primary-dark-blue'; // ADDED THIS LINE
+  | 'cool-teal';
 
 export interface ThemeColors {
   primary: string;

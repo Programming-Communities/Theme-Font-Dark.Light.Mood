@@ -23,44 +23,6 @@ export const FONT_OPTIONS: FontOption[] = [
 
 // ========== ALL THEMES CONFIG ==========
 export const THEMES_CONFIG: ThemeConfigWithMetadata = {
-  // NEW THEME: Primary Dark Blue
-  'primary-dark-blue': {
-    name: 'Primary Dark Blue',
-    category: 'professional',
-    icon: '🔵',
-    description: 'Deep blue with teal accents and yellow highlights',
-    primary: '#194375',
-    secondary: '#1f7190',
-    background: '#0a1929',
-    surface: '#0f2942',
-    text: {
-      primary: '#e6f0ff',
-      secondary: '#b3ccff',
-      accent: '#0a1929'
-    },
-    border: '#2a4a6b',
-    success: '#10b981',
-    warning: '#f5be2e',
-    error: '#ef4444',
-    shadow: '0 4px 12px rgba(25, 67, 117, 0.3)',
-    dark: {
-      primary: '#2563eb',
-      secondary: '#1f7190',
-      background: '#051322',
-      surface: '#0a1f35',
-      text: {
-        primary: '#f0f7ff',
-        secondary: '#c2d6ff',
-        accent: '#051322'
-      },
-      border: '#1e3a5f',
-      success: '#10b981',
-      warning: '#f5be2e',
-      error: '#ef4444',
-      shadow: '0 4px 12px rgba(37, 99, 235, 0.25)'
-    }
-  },
-  
   // Professional Themes
   'professional-blue': {
     name: 'Professional Blue',
@@ -555,7 +517,7 @@ export const getThemeList = (): ThemeOption[] => {
 
 export const getThemeColors = (theme: Theme, isDarkMode: boolean): ThemeWithMetadata => {
   const themeConfig = THEMES_CONFIG[theme];
-  if (!themeConfig) return THEMES_CONFIG['primary-dark-blue'];
+  if (!themeConfig) return THEMES_CONFIG['professional-blue'];
   
   if (isDarkMode && themeConfig.dark) {
     return {

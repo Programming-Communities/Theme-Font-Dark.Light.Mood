@@ -1,42 +1,35 @@
 /* Theme CSS Variables */
 :root {
-  /* Default to Primary Dark Blue theme */
-  --primary: #194375;
-  --secondary: #1f7190;
-  --background: #0a1929;
-  --surface: #0f2942;
-  --text-primary: #e6f0ff;
-  --text-secondary: #b3ccff;
-  --text-accent: #0a1929;
-  --border: #2a4a6b;
-  --success: #10b981;
-  --warning: #f5be2e;
-  --error: #ef4444;
-  --shadow: 0 4px 12px rgba(25, 67, 117, 0.3);
+  /* Default light theme variables */
+  --primary: #2563EB;
+  --secondary: #1E40AF;
+  --background: #FFFFFF;
+  --surface: #F0F7FF;
+  --text-primary: #1E293B;
+  --text-secondary: #475569;
+  --text-accent: #FFFFFF;
+  --border: #CBD5E1;
+  --success: #059669;
+  --warning: #D97706;
+  --error: #DC2626;
+  --shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
   --font-family: system-ui;
 }
 
 /* Dark mode variables */
 .dark {
-  /* Enhanced dark mode for Primary Dark Blue */
-  --primary: #2563eb;
-  --secondary: #1f7190;
-  --background: #051322;
-  --surface: #0a1f35;
-  --text-primary: #f0f7ff;
-  --text-secondary: #c2d6ff;
-  --text-accent: #051322;
-  --border: #1e3a5f;
-  --success: #10b981;
-  --warning: #f5be2e;
-  --error: #ef4444;
-  --shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-}
-
-/* Light mode override for light themes */
-.light {
-  /* Light mode variables will be set by theme config */
-  /* This rule is intentionally empty as it gets populated dynamically */
+  --primary: #3B82F6;
+  --secondary: #60A5FA;
+  --background: #0F172A;
+  --surface: #1E293B;
+  --text-primary: #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --text-accent: #FFFFFF;
+  --border: #334155;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 /* Theme utilities */
@@ -169,25 +162,6 @@
 
 .floating-theme-btn:active {
   transform: scale(0.95);
-}
-
-/* Sun/Moon toggle animation */
-@keyframes sunRise {
-  0% { transform: translateY(100%) rotate(0deg); }
-  100% { transform: translateY(0) rotate(360deg); }
-}
-
-@keyframes moonRise {
-  0% { transform: translateY(-100%) rotate(0deg); }
-  100% { transform: translateY(0) rotate(360deg); }
-}
-
-.sun-icon {
-  animation: sunRise 0.5s ease-out;
-}
-
-.moon-icon {
-  animation: moonRise 0.5s ease-out;
 }
 
 /* Prevent dark reader interference */

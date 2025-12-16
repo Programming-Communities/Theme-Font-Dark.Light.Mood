@@ -37,14 +37,12 @@ const ThemeSettingsButton = () => {
     return null;
   }
 
-  const isPrimaryDarkBlueTheme = theme === 'primary-dark-blue';
-
   return (
     <>
-      {/* Main Settings Button - Bottom Most */}
+      {/* Main Settings Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 group"
+        className="fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95"
         title="Theme Settings"
         style={{
           background: `linear-gradient(135deg, var(--primary), var(--secondary))`,
@@ -53,16 +51,6 @@ const ThemeSettingsButton = () => {
         }}
       >
         <Settings className="h-6 w-6" />
-        
-        {/* Tooltip */}
-        <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 px-2 py-1 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
-             style={{
-               backgroundColor: 'var(--surface)',
-               color: 'var(--text-primary)',
-               border: '1px solid var(--border)'
-             }}>
-          Theme Settings
-        </div>
       </button>
 
       {/* Side Menu Modal */}
@@ -70,7 +58,7 @@ const ThemeSettingsButton = () => {
         <>
           {/* Overlay */}
           <div 
-            className="fixed inset-0 bg-black/50 z-1000 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/50 z-1000"
             onClick={() => setIsOpen(false)}
           />
           
@@ -115,7 +103,7 @@ const ThemeSettingsButton = () => {
                   {/* Dark/Light Mode Toggle */}
                   <button
                     onClick={toggleDarkMode}
-                    className="w-full p-4 rounded-lg flex items-center justify-between transition-all hover:opacity-90 group"
+                    className="w-full p-4 rounded-lg flex items-center justify-between transition-all hover:opacity-90"
                     style={{ 
                       backgroundColor: 'var(--surface)',
                       color: 'var(--text-primary)',
@@ -123,32 +111,22 @@ const ThemeSettingsButton = () => {
                     }}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg relative overflow-hidden" 
-                           style={{ backgroundColor: 'var(--primary)', color: 'var(--text-accent)' }}>
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--primary)', color: 'var(--text-accent)' }}>
                         {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                        {/* Animated background for toggle effect */}
-                        <div className={`absolute inset-0 transition-transform duration-300 ${isDarkMode ? 'translate-y-0' : 'translate-y-full'}`}
-                             style={{ backgroundColor: 'var(--secondary)' }} />
                       </div>
                       <div className="text-left">
                         <div className="font-medium">Dark Mode</div>
                         <div className="text-sm opacity-75">
-                          {isDarkMode ? 'Night Mode Active' : 'Day Mode Active'}
+                          {isDarkMode ? 'Currently on' : 'Currently off'}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <div 
-                        className={`w-10 h-6 rounded-full flex items-center p-1 transition-all duration-300 ${isDarkMode ? 'justify-end' : 'justify-start'}`}
+                        className={`w-10 h-6 rounded-full flex items-center p-1 ${isDarkMode ? 'justify-end' : 'justify-start'}`}
                         style={{ backgroundColor: isDarkMode ? 'var(--primary)' : 'var(--border)' }}
                       >
-                        <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--background)' }}>
-                          {isDarkMode ? (
-                            <Moon className="h-2 w-2" style={{ color: 'var(--primary)' }} />
-                          ) : (
-                            <Sun className="h-2 w-2" style={{ color: 'var(--warning)' }} />
-                          )}
-                        </div>
+                        <div className="w-4 h-4 rounded-full" style={{ backgroundColor: 'var(--background)' }}></div>
                       </div>
                     </div>
                   </button>
@@ -236,18 +214,16 @@ const ThemeSettingsButton = () => {
                       >
                         <div className="flex items-center gap-3">
                           <div 
-                            className="w-8 h-8 rounded-full border-2 relative overflow-hidden"
+                            className="w-8 h-8 rounded-full border-2"
                             style={{ 
                               borderColor: 'var(--background)',
                               background: `linear-gradient(135deg, ${
-                                themeOption.value === 'primary-dark-blue' ? '#194375' :
                                 themeOption.value.includes('blue') ? '#2563EB' : 
                                 themeOption.value.includes('green') ? '#059669' : 
                                 themeOption.value.includes('purple') ? '#7C3AED' : 
                                 themeOption.value.includes('gold') ? '#D97706' : 
                                 themeOption.value.includes('gray') ? '#4B5563' : '#06B6D4'
                               }, ${
-                                themeOption.value === 'primary-dark-blue' ? '#1f7190' :
                                 themeOption.value.includes('blue') ? '#1E40AF' : 
                                 themeOption.value.includes('green') ? '#047857' : 
                                 themeOption.value.includes('purple') ? '#6D28D9' : 
@@ -255,11 +231,7 @@ const ThemeSettingsButton = () => {
                                 themeOption.value.includes('gray') ? '#374151' : '#0891B2'
                               })` 
                             }}
-                          >
-                            {themeOption.value === 'primary-dark-blue' && (
-                              <div className="absolute bottom-0 left-0 right-0 h-2 bg-linear-to-r from-[#f5be2e] to-[#ffd966]" />
-                            )}
-                          </div>
+                          />
                           <div className="text-left">
                             <div className="font-medium">
                               {themeOption.label}
