@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { wordpressClient } from '@/lib/wordpress/client';
-import PostDetailClient from './PostDetailClient';
+import PostDetailClient from '@/components/blog/PostDetailClient';
 import { Suspense } from 'react';
 import PostSkeleton from '@/components/ui/skeleton/PostSkeleton';
 
