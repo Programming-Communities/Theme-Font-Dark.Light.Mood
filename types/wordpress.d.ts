@@ -1,111 +1,180 @@
+// types/wordpress.d.ts
+// FIXED VERSION
+
 export interface WordPressPost {
-  id: string;
-  databaseId: number;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
+  id: number;
   date: string;
+  date_gmt: string;
   modified: string;
-  featuredImage?: {
-    node: {
-      sourceUrl: string;
-      altText: string;
-      mediaDetails: {
-        width: number;
-        height: number;
-      };
-    };
-  };
-  categories: {
-    nodes: Array<{
-      id: string;
-      name: string;
-      slug: string;
-    }>;
-  };
-  tags: {
-    nodes: Array<{
-      id: string;
-      name: string;
-      slug: string;
-    }>;
-  };
-  author: {
-    node: {
-      name: string;
-      avatar: {
-        url: string;
-      };
-    };
-  };
-  commentCount: number;
-  commentStatus: string;
-}
-
-export interface WordPressCategory {
-  id: string;
-  name: string;
+  modified_gmt: string;
   slug: string;
-  description?: string;
-  count: number;
-}
-
-export interface WordPressTag {
-  id: string;
-  name: string;
-  slug: string;
-  count: number;
+  status: string;
+  type: string;
+  link: string;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+    protected: boolean;
+  };
+  excerpt: {
+    rendered: string;
+    protected: boolean;
+  };
+  author: number;
+  featured_media: number;
+  comment_status: string;
+  ping_status: string;
+  sticky: boolean;
+  template: string;
+  format: string;
+  meta: Record<string, unknown>;
+  categories: number[];
+  tags: number[];
+  _embedded?: {
+    author?: WordPressUser[];
+    "wp:featuredmedia"?: WordPressMedia[];
+    "wp:term"?: Array<WordPressTerm[]>;
+  };
+  // Alias properties for easier access
+  featuredMedia?: number;
+  featuredMediaUrl?: string;
+  excerptText?: string;
+  contentText?: string;
 }
 
 export interface WordPressMedia {
-  id: string;
-  sourceUrl: string;
-  altText: string;
-  mediaDetails: {
+  id: number;
+  date: string;
+  date_gmt: string;
+  slug: string;
+  type: string;
+  link: string;
+  title: {
+    rendered: string;
+  };
+  author: number;
+  caption: {
+    rendered: string;
+  };
+  alt_text: string;
+  media_type: string;
+  mime_type: string;
+  source_url: string;
+  media_details: {
     width: number;
     height: number;
-  };
-  caption?: string;
-  description?: string;
-}
-
-export interface WordPressPageInfo {
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  startCursor?: string;
-  endCursor?: string;
-}
-
-export interface WordPressResponse<T> {
-  data: T;
-  errors?: Array<{
-    message: string;
-  }>;
-}
-
-export interface PostsResponse {
-  posts: {
-    nodes: WordPressPost[];
-    pageInfo: WordPressPageInfo;
-  };
-}
-
-export interface CategoriesResponse {
-  categories: {
-    nodes: WordPressCategory[];
-  };
-}
-
-export interface PostBySlugResponse {
-  post: WordPressPost;
-}
-
-export interface CategoryBySlugResponse {
-  category: WordPressCategory & {
-    posts: {
-      nodes: WordPressPost[];
-      pageInfo: WordPressPageInfo;
+    file: string;
+    sizes: {
+      [key: string]: {
+        file: string;
+        width: number;
+        height: number;
+        mime_type: string;
+        source_url: string;
+      };
     };
   };
+  // Alias properties
+  altText?: string;
+  mediaType?: string;
+  mimeType?: string;
+  sourceUrl?: string;
+  mediaDetails?: {
+    width: number;
+    height: number;
+    file: string;
+    sizes: {
+      [key: string]: {
+        file: string;
+        width: number;
+        height: number;
+        mimeType: string;
+        sourceUrl: string;
+      };
+    };
+  };
+}
+
+export interface WordPressUser {
+  id: number;
+  name: string;
+  url: string;
+  description: string;
+  link: string;
+  slug: string;
+  avatar_urls: {
+    24: string;
+    48: string;
+    96: string;
+  };
+  // Alias properties
+  avatarUrls?: {
+    24: string;
+    48: string;
+    96: string;
+  };
+}
+
+export interface WordPressTerm {
+  id: number;
+  count: number;
+  description: string;
+  link: string;
+  name: string;
+  slug: string;
+  taxonomy: string;
+  parent: number;
+}
+
+export interface WordPressComment {
+  id: number;
+  post: number;
+  parent: number;
+  author: number;
+  author_name: string;
+  author_url: string;
+  date: string;
+  date_gmt: string;
+  content: {
+    rendered: string;
+  };
+  link: string;
+  status: string;
+  type: string;
+  author_avatar_urls: {
+    24: string;
+    48: string;
+    96: string;
+  };
+}
+
+export interface WordPressMenu {
+  id: number;
+  description: string;
+  name: string;
+  slug: string;
+  locations: string[];
+  items: WordPressMenuItem[];
+}
+
+export interface WordPressMenuItem {
+  id: number;
+  title: string;
+  url: string;
+  attr_title: string;
+  description: string;
+  type: string;
+  type_label: string;
+  object: string;
+  object_id: number;
+  parent: number;
+  menu_order: number;
+  target: string;
+  classes: string[];
+  xfn: string[];
+  invalid: boolean;
+  meta: Record<string, unknown>;
+  children?: WordPressMenuItem[];
 }
