@@ -1,0 +1,414 @@
+/* components/wordpress/AuthorBio.module.css */
+.authorBio {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  margin: var(--spacing-xl) 0;
+  border: 1px solid var(--border-color);
+}
+
+.authorBio.compact {
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+}
+
+/* Loading & Error States */
+.loadingContainer,
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.loadingContainer {
+  color: var(--text-secondary);
+}
+
+.errorContainer {
+  color: var(--error-color);
+  background: var(--error-bg);
+  border-color: var(--error-border);
+}
+
+.errorIcon {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.errorMessage {
+  margin: 0;
+}
+
+/* Author Header */
+.authorHeader {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.authorBio.compact .authorHeader {
+  gap: var(--spacing-md);
+  margin-bottom: 0;
+}
+
+.avatarContainer {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
+  background: var(--bg-tertiary);
+}
+
+.authorBio.compact .avatar {
+  width: 64px;
+  height: 64px;
+  border-width: 2px;
+}
+
+.verifiedBadge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--success-color);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  border: 2px solid var(--card-bg);
+}
+
+.authorBio.compact .verifiedBadge {
+  width: 20px;
+  height: 20px;
+  font-size: var(--font-size-xs);
+}
+
+.authorInfo {
+  flex: 1;
+  min-width: 0; /* Prevents flex item from overflowing */
+}
+
+.authorName {
+  margin: 0 0 var(--spacing-sm);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.authorBio.compact .authorName {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-xs);
+}
+
+.authorLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.authorLink:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.authorDescription {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: var(--font-size-base);
+}
+
+.authorBio.compact .authorDescription {
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
+
+.authorRole {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: var(--primary-light);
+  color: var(--primary-color);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.roleIcon {
+  font-size: var(--font-size-sm);
+}
+
+/* Author Stats */
+.authorStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.statItem {
+  text-align: center;
+  padding: var(--spacing-sm);
+}
+
+.statNumber {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xs);
+}
+
+.statLabel {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Social Links */
+.socialLinks {
+  margin-bottom: var(--spacing-lg);
+}
+
+.socialTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-sm);
+}
+
+.socialIcons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.socialIcon {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-sm);
+}
+
+.socialIcon:hover {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+.icon {
+  font-size: var(--font-size-base);
+}
+
+.platform {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .platform {
+    display: inline;
+  }
+}
+
+/* Recent Posts */
+.recentPosts {
+  margin-bottom: var(--spacing-lg);
+}
+
+.recentTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-sm);
+}
+
+.postsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.postItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.postItem:hover {
+  background: var(--primary-light);
+  border-color: var(--primary-color);
+  transform: translateX(4px);
+}
+
+.postThumbnail {
+  flex-shrink: 0;
+  width: 60px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.postInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.postTitle {
+  margin: 0 0 var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.postDate {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+/* Author Actions */
+.authorActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+}
+
+.viewProfileButton,
+.followButton,
+.messageButton {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  font-size: var(--font-size-sm);
+}
+
+.viewProfileButton {
+  background: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.viewProfileButton:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.followButton {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.followButton:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.messageButton {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.messageButton:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .authorBio {
+    padding: var(--spacing-md);
+  }
+  
+  .authorHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .authorStats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .authorActions {
+    flex-direction: column;
+  }
+  
+  .viewProfileButton,
+  .followButton,
+  .messageButton {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Dark mode adjustments */
+.dark .authorBio {
+  background: var(--card-bg-dark);
+  border-color: var(--border-color-dark);
+}
+
+.dark .authorStats,
+.dark .postItem,
+.dark .socialIcon {
+  background: var(--bg-secondary-dark);
+  border-color: var(--border-color-dark);
+}
+
+.dark .postItem:hover {
+  background: var(--primary-light-dark);
+  border-color: var(--primary-color-dark);
+}
