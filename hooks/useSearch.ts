@@ -1,369 +1,471 @@
-    'use client';
+'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { WordPressClient } from '@/lib/wordpress';
-import { SearchResult, SearchFilters } from '@/types/wordpress';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useDebounce } from './useDebounce';
-import { useDevice } from './useDevice';
+import { useWordPress } from './useWordPress';
 
-const wordpressClient = new WordPressClient();
-const RECENT_SEARCHES_KEY = 'communities_pk_recent_searches';
-const MAX_RECENT_SEARCHES = 10;
-const SEARCH_DELAY_MS = 300;
+export interface SearchResult {
+  id: number;
+  title: string;
+  excerpt: string;
+  url: string;
+  type: 'post' | 'page' | 'category' | 'tag' | 'user';
+  date?: string;
+  author?: string;
+  image?: string;
+  relevance?: number;
+}
 
-export function useSearch() {
+export interface SearchOptions {
+  debounce?: number;
+  minLength?: number;
+  maxResults?: number;
+  includeTypes?: SearchResult['type'][];
+  searchIn?: ('title' | 'content' | 'excerpt' | 'author')[];
+}
+
+export interface SearchHistoryItem {
+  query: string;
+  timestamp: number;
+  resultsCount: number;
+}
+
+export interface UseSearchReturn {
+  query: string;
+  results: SearchResult[];
+  isLoading: boolean;
+  error: string | null;
+  history: SearchHistoryItem[];
+  totalResults: number;
+  hasMore: boolean;
+  setQuery: (query: string) => void;
+  clearSearch: () => void;
+  loadMore: () => Promise<void>;
+  clearHistory: () => void;
+  removeFromHistory: (index: number) => void;
+}
+
+export function useSearch(options: SearchOptions = {}): UseSearchReturn {
+  const {
+    debounce: debounceTime = 300,
+    minLength = 2,
+    maxResults = 10,
+    includeTypes = ['post', 'page'],
+    searchIn = ['title', 'content', 'excerpt'],
+  } = options;
+
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState<SearchFilters>({});
+  const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [history, setHistory] = useState<SearchHistoryItem[]>([]);
   
-  const device = useDevice();
-  const debouncedQuery = useDebounce(query, SEARCH_DELAY_MS);
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const debouncedQuery = useDebounce(query, debounceTime);
+  const { searchPosts, searchPages, searchCategories, searchTags, searchUsers } = useWordPress();
+  const lastRequestId = useRef(0);
 
-  // Load recent searches on mount
+  // Load search history from localStorage
   useEffect(() => {
-    loadRecentSearches();
+    if (typeof window === 'undefined') return;
+
+    const savedHistory = localStorage.getItem('searchHistory');
+    if (savedHistory) {
+      try {
+        setHistory(JSON.parse(savedHistory));
+      } catch (err) {
+        console.error('Error parsing search history:', err);
+      }
+    }
   }, []);
+
+  // Save search history to localStorage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem('searchHistory', JSON.stringify(history));
+  }, [history]);
+
+  const addToHistory = useCallback((query: string, resultsCount: number) => {
+    if (!query.trim() || resultsCount === 0) return;
+
+    setHistory(prev => {
+      const newHistory = [
+        { query, timestamp: Date.now(), resultsCount },
+        ...prev.filter(item => item.query.toLowerCase() !== query.toLowerCase())
+      ].slice(0, 10); // Keep only last 10 searches
+      return newHistory;
+    });
+  }, []);
+
+  const performSearch = useCallback(async (
+    searchQuery: string,
+    pageNum: number = 1,
+    isLoadMore: boolean = false
+  ): Promise<{ results: SearchResult[]; total: number }> => {
+    if (!searchQuery.trim() || searchQuery.length < minLength) {
+      return { results: [], total: 0 };
+    }
+
+    const requestId = ++lastRequestId.current;
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const promises: Promise<any[]>[] = [];
+      const types: SearchResult['type'][] = [];
+
+      // Prepare search promises based on included types
+      if (includeTypes.includes('post')) {
+        types.push('post');
+        promises.push(searchPosts({
+          search: searchQuery,
+          per_page: maxResults,
+          page: pageNum,
+          search_columns: searchIn.includes('title') ? ['post_title'] : [],
+        }));
+      }
+
+      if (includeTypes.includes('page')) {
+        types.push('page');
+        promises.push(searchPages({
+          search: searchQuery,
+          per_page: maxResults,
+          page: pageNum,
+        }));
+      }
+
+      if (includeTypes.includes('category')) {
+        types.push('category');
+        promises.push(searchCategories({
+          search: searchQuery,
+          per_page: maxResults,
+          page: pageNum,
+        }));
+      }
+
+      if (includeTypes.includes('tag')) {
+        types.push('tag');
+        promises.push(searchTags({
+          search: searchQuery,
+          per_page: maxResults,
+          page: pageNum,
+        }));
+      }
+
+      if (includeTypes.includes('user')) {
+        types.push('user');
+        promises.push(searchUsers({
+          search: searchQuery,
+          per_page: maxResults,
+          page: pageNum,
+          search_columns: searchIn.includes('author') ? ['display_name'] : [],
+        }));
+      }
+
+      const allResults = await Promise.all(promises);
+      
+      // Check if this request is still valid
+      if (requestId !== lastRequestId.current) {
+        return { results: [], total: 0 };
+      }
+
+      // Combine and format results
+      const formattedResults: SearchResult[] = [];
+      allResults.forEach((typeResults, index) => {
+        const type = types[index];
+        typeResults.forEach((item: any) => {
+          let relevance = 1;
+          
+          // Calculate relevance score based on match quality
+          if (type === 'post' || type === 'page') {
+            const titleMatch = item.title?.rendered?.toLowerCase().includes(searchQuery.toLowerCase());
+            const contentMatch = item.content?.rendered?.toLowerCase().includes(searchQuery.toLowerCase());
+            const excerptMatch = item.excerpt?.rendered?.toLowerCase().includes(searchQuery.toLowerCase());
+            
+            if (titleMatch) relevance += 2;
+            if (contentMatch) relevance += 1;
+            if (excerptMatch) relevance += 1.5;
+          }
+
+          formattedResults.push({
+            id: item.id,
+            title: type === 'post' || type === 'page' 
+              ? item.title?.rendered || 'Untitled'
+              : type === 'category' || type === 'tag'
+                ? item.name
+                : item.name || item.display_name || 'Unknown',
+            excerpt: type === 'post' || type === 'page'
+              ? item.excerpt?.rendered || ''
+              : type === 'category' || type === 'tag'
+                ? item.description || ''
+                : item.description || '',
+            url: type === 'post' || type === 'page'
+              ? item.slug
+              : type === 'category'
+                ? `/category/${item.slug}`
+                : type === 'tag'
+                  ? `/tag/${item.slug}`
+                  : `/author/${item.slug}`,
+            type,
+            date: type === 'post' || type === 'page' ? item.date : undefined,
+            author: type === 'post' ? item.author_name : undefined,
+            image: type === 'post' || type === 'page' 
+              ? item.featured_media_url || item.jetpack_featured_media_url
+              : undefined,
+            relevance,
+          });
+        });
+      });
+
+      // Sort by relevance
+      formattedResults.sort((a, b) => (b.relevance || 0) - (a.relevance || 0));
+
+      // Take only maxResults
+      const finalResults = formattedResults.slice(0, maxResults);
+      const total = formattedResults.length;
+
+      if (!isLoadMore) {
+        addToHistory(searchQuery, total);
+      }
+
+      return { results: finalResults, total };
+    } catch (err) {
+      if (requestId === lastRequestId.current) {
+        setError(err instanceof Error ? err.message : 'Search failed');
+      }
+      return { results: [], total: 0 };
+    } finally {
+      if (requestId === lastRequestId.current) {
+        setIsLoading(false);
+      }
+    }
+  }, [
+    minLength,
+    maxResults,
+    includeTypes,
+    searchIn,
+    searchPosts,
+    searchPages,
+    searchCategories,
+    searchTags,
+    searchUsers,
+    addToHistory,
+  ]);
 
   // Perform search when query changes
   useEffect(() => {
-    if (debouncedQuery.trim().length >= 2) {
-      performSearch(debouncedQuery);
-    } else {
-      setResults([]);
-      setTotalResults(0);
-    }
-  }, [debouncedQuery, filters]);
-
-  // Load recent searches from localStorage
-  const loadRecentSearches = useCallback(() => {
-    if (typeof window === 'undefined') return;
-
-    try {
-      const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
-      if (stored) {
-        const searches = JSON.parse(stored);
-        setRecentSearches(Array.isArray(searches) ? searches : []);
+    const search = async () => {
+      if (debouncedQuery.length >= minLength) {
+        const { results: newResults, total } = await performSearch(debouncedQuery, 1);
+        setResults(newResults);
+        setTotalResults(total);
+        setPage(1);
+      } else {
+        setResults([]);
+        setTotalResults(0);
       }
-    } catch (err) {
-      console.error('Failed to load recent searches:', err);
-    }
-  }, []);
+    };
 
-  // Save search to recent searches
-  const saveToRecentSearches = useCallback((searchQuery: string) => {
-    if (!searchQuery.trim() || typeof window === 'undefined') return;
+    search();
+  }, [debouncedQuery, minLength, performSearch]);
 
-    const trimmedQuery = searchQuery.trim();
-    const updatedSearches = [
-      trimmedQuery,
-      ...recentSearches.filter(s => s.toLowerCase() !== trimmedQuery.toLowerCase()),
-    ].slice(0, MAX_RECENT_SEARCHES);
+  const loadMore = useCallback(async () => {
+    if (isLoading || results.length >= totalResults) return;
 
-    setRecentSearches(updatedSearches);
-
-    try {
-      localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updatedSearches));
-    } catch (err) {
-      console.error('Failed to save recent searches:', err);
-    }
-  }, [recentSearches]);
-
-  // Clear recent searches
-  const clearRecentSearches = useCallback(() => {
-    setRecentSearches([]);
+    const nextPage = page + 1;
+    const { results: newResults } = await performSearch(query, nextPage, true);
     
-    if (typeof window === 'undefined') return;
-    
-    try {
-      localStorage.removeItem(RECENT_SEARCHES_KEY);
-    } catch (err) {
-      console.error('Failed to clear recent searches:', err);
-    }
-  }, []);
+    setResults(prev => [...prev, ...newResults]);
+    setPage(nextPage);
+  }, [isLoading, results.length, totalResults, page, query, performSearch]);
 
-  // Get search suggestions
-  const getSuggestions = useCallback(async (partialQuery: string) => {
-    if (partialQuery.trim().length < 2) {
-      setSuggestions([]);
-      return;
-    }
-
-    try {
-      // Get suggestions from WordPress
-      const data = await wordpressClient.searchPosts(partialQuery, {
-        perPage: 5,
-        fields: ['title'],
-      });
-
-      // Extract titles as suggestions
-      const newSuggestions = data.results
-        .map(result => result.title)
-        .filter((title, index, array) => 
-          title && array.indexOf(title) === index
-        )
-        .slice(0, 5);
-
-      // Add from recent searches
-      const recentSuggestions = recentSearches
-        .filter(search => 
-          search.toLowerCase().includes(partialQuery.toLowerCase()) &&
-          !newSuggestions.some(s => s.toLowerCase() === search.toLowerCase())
-        )
-        .slice(0, 3);
-
-      setSuggestions([...newSuggestions, ...recentSuggestions]);
-    } catch (err) {
-      console.error('Failed to get suggestions:', err);
-      setSuggestions([]);
-    }
-  }, [recentSearches]);
-
-  // Perform the actual search
-  const performSearch = useCallback(async (searchQuery: string) => {
-    // Cancel previous request if exists
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    // Create new abort controller
-    abortControllerRef.current = new AbortController();
-    
-    setIsSearching(true);
-    setError(null);
-
-    try {
-      const searchParams = {
-        ...filters,
-        perPage: device.isMobile ? 10 : 20,
-      };
-
-      const data = await wordpressClient.searchPosts(
-        searchQuery,
-        searchParams,
-        abortControllerRef.current.signal
-      );
-
-      setResults(data.results);
-      setTotalResults(data.totalResults);
-      
-      // Save to recent searches
-      saveToRecentSearches(searchQuery);
-      
-      // Track search event
-      trackSearchEvent(searchQuery, data.totalResults);
-    } catch (err) {
-      // Ignore abort errors
-      if (err instanceof Error && err.name === 'AbortError') {
-        return;
-      }
-      
-      const errorMessage = err instanceof Error ? err.message : 'Search failed';
-      setError(errorMessage);
-      setResults([]);
-      setTotalResults(0);
-      
-      console.error('Search error:', err);
-    } finally {
-      setIsSearching(false);
-      abortControllerRef.current = null;
-    }
-  }, [filters, device.isMobile, saveToRecentSearches]);
-
-  // Update search query
-  const updateQuery = useCallback((newQuery: string) => {
-    setQuery(newQuery);
-    
-    // Get suggestions for the new query
-    if (newQuery.trim().length >= 2) {
-      getSuggestions(newQuery);
-    } else {
-      setSuggestions([]);
-    }
-  }, [getSuggestions]);
-
-  // Update search filters
-  const updateFilters = useCallback((newFilters: Partial<SearchFilters>) => {
-    setFilters(prev => ({
-      ...prev,
-      ...newFilters,
-    }));
-  }, []);
-
-  // Clear all filters
-  const clearFilters = useCallback(() => {
-    setFilters({});
-  }, []);
-
-  // Clear search
   const clearSearch = useCallback(() => {
     setQuery('');
     setResults([]);
+    setPage(1);
     setTotalResults(0);
-    setSuggestions([]);
     setError(null);
-    
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-      abortControllerRef.current = null;
+  }, []);
+
+  const clearHistory = useCallback(() => {
+    setHistory([]);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('searchHistory');
     }
   }, []);
 
-  // Perform a search with specific query
-  const search = useCallback((searchQuery: string, searchFilters?: SearchFilters) => {
-    setQuery(searchQuery);
-    
-    if (searchFilters) {
-      setFilters(searchFilters);
-    }
-    
-    // Trigger immediate search
-    setTimeout(() => {
-      performSearch(searchQuery);
-    }, 0);
-  }, [performSearch]);
+  const removeFromHistory = useCallback((index: number) => {
+    setHistory(prev => prev.filter((_, i) => i !== index));
+  }, []);
 
-  // Get search history statistics
-  const getSearchStats = useCallback(() => {
-    const today = new Date().toDateString();
-    const searchesToday = recentSearches.filter(search => {
-      // This would need proper date tracking in real implementation
-      return true; // Simplified for now
-    }).length;
-
-    return {
-      totalSearches: recentSearches.length,
-      searchesToday,
-      mostCommonSearch: recentSearches.length > 0 
-        ? recentSearches.reduce((a, b, i, arr) => 
-            arr.filter(v => v === a).length >= arr.filter(v => v === b).length ? a : b
-          )
-        : null,
-    };
-  }, [recentSearches]);
+  const updateQuery = useCallback((newQuery: string) => {
+    setQuery(newQuery);
+  }, []);
 
   return {
     query,
     results,
-    isSearching,
+    isLoading,
     error,
-    filters,
+    history,
     totalResults,
-    suggestions,
-    recentSearches,
-    updateQuery,
-    updateFilters,
-    clearFilters,
+    hasMore: results.length < totalResults,
+    setQuery: updateQuery,
     clearSearch,
-    search,
-    clearRecentSearches,
-    getSearchStats,
-    performSearch: () => performSearch(query),
+    loadMore,
+    clearHistory,
+    removeFromHistory,
   };
 }
 
-function trackSearchEvent(query: string, resultCount: number) {
-  if (window.gtag) {
-    window.gtag('event', 'search', {
-      event_category: 'engagement',
-      event_label: query,
-      search_term: query,
-      search_results: resultCount,
-    });
-  }
+export interface SearchSuggestionsProps {
+  query: string;
+  maxSuggestions?: number;
+  onSelect?: (suggestion: string) => void;
 }
 
-// Hook for search input with autocomplete
-export function useSearchInput() {
-  const [inputValue, setInputValue] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
-  
-  const { query, suggestions, updateQuery, search } = useSearch();
+export function useSearchSuggestions(props: SearchSuggestionsProps) {
+  const { query, maxSuggestions = 5, onSelect } = props;
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const { getPopularSearches, getRelatedTerms } = useWordPress();
 
-  // Sync with main search query
   useEffect(() => {
-    setInputValue(query);
-  }, [query]);
+    const fetchSuggestions = async () => {
+      if (!query.trim() || query.length < 2) {
+        setSuggestions([]);
+        return;
+      }
 
-  const handleInputChange = useCallback((value: string) => {
-    setInputValue(value);
-    updateQuery(value);
-    setShowSuggestions(true);
-    setSelectedSuggestionIndex(-1);
-  }, [updateQuery]);
+      setIsLoading(true);
+      try {
+        // Get suggestions from multiple sources
+        const [popularSearches, relatedTerms] = await Promise.all([
+          getPopularSearches(10),
+          getRelatedTerms(query, 10),
+        ]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (!showSuggestions || suggestions.length === 0) return;
+        // Combine and filter suggestions
+        const allSuggestions = [
+          ...popularSearches,
+          ...relatedTerms,
+        ]
+          .filter(term => term.toLowerCase().includes(query.toLowerCase()))
+          .filter((term, index, self) => self.indexOf(term) === index) // Remove duplicates
+          .slice(0, maxSuggestions);
 
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setSelectedSuggestionIndex(prev =>
-          prev < suggestions.length - 1 ? prev + 1 : 0
-        );
-        break;
+        setSuggestions(allSuggestions);
+      } catch (error) {
+        console.error('Error fetching search suggestions:', error);
+        setSuggestions([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      case 'ArrowUp':
-        e.preventDefault();
-        setSelectedSuggestionIndex(prev =>
-          prev > 0 ? prev - 1 : suggestions.length - 1
-        );
-        break;
+    const debounceTimer = setTimeout(fetchSuggestions, 150);
+    return () => clearTimeout(debounceTimer);
+  }, [query, maxSuggestions, getPopularSearches, getRelatedTerms]);
 
-      case 'Enter':
-        e.preventDefault();
-        if (selectedSuggestionIndex >= 0) {
-          handleSuggestionSelect(suggestions[selectedSuggestionIndex]);
-        } else {
-          search(inputValue);
-          setShowSuggestions(false);
-        }
-        break;
-
-      case 'Escape':
-        setShowSuggestions(false);
-        setSelectedSuggestionIndex(-1);
-        break;
-    }
-  }, [showSuggestions, suggestions, selectedSuggestionIndex, inputValue, search]);
-
-  const handleSuggestionSelect = useCallback((suggestion: string) => {
-    setInputValue(suggestion);
-    search(suggestion);
-    setShowSuggestions(false);
-    setSelectedSuggestionIndex(-1);
-  }, [search]);
-
-  const handleInputFocus = useCallback(() => {
-    if (inputValue.length >= 2 && suggestions.length > 0) {
-      setShowSuggestions(true);
-    }
-  }, [inputValue, suggestions]);
-
-  const handleInputBlur = useCallback(() => {
-    // Delay hiding to allow click on suggestions
-    setTimeout(() => {
-      setShowSuggestions(false);
-      setSelectedSuggestionIndex(-1);
-    }, 200);
-  }, []);
+  const handleSelect = useCallback((suggestion: string) => {
+    onSelect?.(suggestion);
+  }, [onSelect]);
 
   return {
-    inputValue,
-    showSuggestions,
     suggestions,
-    selectedSuggestionIndex,
-    handleInputChange,
-    handleKeyDown,
-    handleSuggestionSelect,
-    handleInputFocus,
-    handleInputBlur,
-    setShowSuggestions,
+    isLoading,
+    handleSelect,
+  };
+}
+
+export interface SearchFilters {
+  categories?: number[];
+  tags?: number[];
+  authors?: number[];
+  dateRange?: {
+    start: Date;
+    end: Date;
+  };
+  sortBy?: 'relevance' | 'date' | 'title';
+  order?: 'asc' | 'desc';
+}
+
+export function useAdvancedSearch(
+  initialFilters: SearchFilters = {},
+  options: SearchOptions = {}
+) {
+  const [filters, setFilters] = useState<SearchFilters>(initialFilters);
+  const { query, results, isLoading, error, ...searchProps } = useSearch(options);
+
+  const updateFilter = useCallback(<K extends keyof SearchFilters>(
+    key: K,
+    value: SearchFilters[K]
+  ) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  }, []);
+
+  const clearFilters = useCallback(() => {
+    setFilters({});
+  }, []);
+
+  // Apply filters to search results
+  const filteredResults = results.filter(result => {
+    // Apply category filter
+    if (filters.categories?.length && result.type === 'post') {
+      // This would require additional data fetching in real implementation
+      return true;
+    }
+
+    // Apply tag filter
+    if (filters.tags?.length && result.type === 'post') {
+      // This would require additional data fetching in real implementation
+      return true;
+    }
+
+    // Apply date range filter
+    if (filters.dateRange && result.date) {
+      const resultDate = new Date(result.date);
+      if (
+        resultDate < filters.dateRange.start ||
+        resultDate > filters.dateRange.end
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  // Sort results
+  const sortedResults = [...filteredResults].sort((a, b) => {
+    if (filters.sortBy === 'date') {
+      const dateA = a.date ? new Date(a.date).getTime() : 0;
+      const dateB = b.date ? new Date(b.date).getTime() : 0;
+      return filters.order === 'asc' ? dateA - dateB : dateB - dateA;
+    }
+
+    if (filters.sortBy === 'title') {
+      const titleA = a.title.toLowerCase();
+      const titleB = b.title.toLowerCase();
+      const comparison = titleA.localeCompare(titleB);
+      return filters.order === 'asc' ? comparison : -comparison;
+    }
+
+    // Default: relevance
+    const relevanceA = a.relevance || 0;
+    const relevanceB = b.relevance || 0;
+    return filters.order === 'asc' ? relevanceA - relevanceB : relevanceB - relevanceA;
+  });
+
+  return {
+    query: searchProps.query,
+    results: sortedResults,
+    isLoading,
+    error,
+    filters,
+    updateFilter,
+    clearFilters,
+    ...searchProps,
   };
 }

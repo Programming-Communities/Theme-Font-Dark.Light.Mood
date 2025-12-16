@@ -1,314 +1,391 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { PaginationParams, PaginationResult } from '@/types/wordpress';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
-const DEFAULT_PER_PAGE = 10;
-const MAX_PAGE_BUTTONS = 7;
+export interface PaginationOptions {
+  totalItems: number;
+  itemsPerPage?: number;
+  initialPage?: number;
+  maxPagesToShow?: number;
+  onPageChange?: (page: number) => void;
+  onItemsPerPageChange?: (itemsPerPage: number) => void;
+}
 
-export function usePagination(
-  totalItems: number,
-  initialPage: number = 1,
-  itemsPerPage: number = DEFAULT_PER_PAGE
-) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  
+export interface PaginationReturn {
+  currentPage: number;
+  totalPages: number;
+  itemsPerPage: number;
+  totalItems: number;
+  startIndex: number;
+  endIndex: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+  pages: number[];
+  goToPage: (page: number) => void;
+  nextPage: () => void;
+  previousPage: () => void;
+  firstPage: () => void;
+  lastPage: () => void;
+  setItemsPerPage: (itemsPerPage: number) => void;
+  getPageItems: <T>(items: T[]) => T[];
+  getPageInfo: () => {
+    from: number;
+    to: number;
+    total: number;
+  };
+}
+
+export function usePagination(options: PaginationOptions): PaginationReturn {
+  const {
+    totalItems,
+    itemsPerPage: initialItemsPerPage = 10,
+    initialPage = 1,
+    maxPagesToShow = 5,
+    onPageChange,
+    onItemsPerPageChange,
+  } = options;
+
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [perPage, setPerPage] = useState(itemsPerPage);
+  const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
 
-  // Calculate total pages
-  const totalPages = Math.max(1, Math.ceil(totalItems / perPage));
+  // Calculate derived values
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+  const hasPreviousPage = currentPage > 1;
+  const hasNextPage = currentPage < totalPages;
 
-  // Sync with URL search params
+  // Generate page numbers with ellipsis
+  const pages = useMemo(() => {
+    if (totalPages <= maxPagesToShow) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const half = Math.floor(maxPagesToShow / 2);
+    let start = currentPage - half;
+    let end = currentPage + half;
+
+    if (start < 1) {
+      start = 1;
+      end = Math.min(maxPagesToShow, totalPages);
+    }
+
+    if (end > totalPages) {
+      end = totalPages;
+      start = Math.max(1, totalPages - maxPagesToShow + 1);
+    }
+
+    const pages: number[] = [];
+    
+    // Always show first page
+    if (start > 1) {
+      pages.push(1);
+      if (start > 2) {
+        pages.push(-1); // -1 represents ellipsis
+      }
+    }
+
+    // Middle pages
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    // Always show last page
+    if (end < totalPages) {
+      if (end < totalPages - 1) {
+        pages.push(-1); // -1 represents ellipsis
+      }
+      pages.push(totalPages);
+    }
+
+    return pages;
+  }, [currentPage, totalPages, maxPagesToShow]);
+
+  // Validate and adjust current page when total pages changes
   useEffect(() => {
-    const pageParam = searchParams.get('page');
-    const perPageParam = searchParams.get('per_page');
-
-    if (pageParam) {
-      const page = parseInt(pageParam, 10);
-      if (!isNaN(page) && page >= 1 && page <= totalPages) {
-        setCurrentPage(page);
-      }
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
     }
-
-    if (perPageParam) {
-      const perPageValue = parseInt(perPageParam, 10);
-      if (!isNaN(perPageValue) && perPageValue > 0) {
-        setPerPage(perPageValue);
-      }
-    }
-  }, [searchParams, totalPages]);
-
-  // Update URL when pagination changes
-  const updateURL = useCallback((page: number, perPageValue: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    
-    if (page > 1) {
-      params.set('page', page.toString());
-    } else {
-      params.delete('page');
-    }
-    
-    if (perPageValue !== DEFAULT_PER_PAGE) {
-      params.set('per_page', perPageValue.toString());
-    } else {
-      params.delete('per_page');
-    }
-    
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [router, pathname, searchParams]);
-
-  // Go to specific page
-  const goToPage = useCallback((page: number) => {
-    if (page < 1 || page > totalPages || page === currentPage) return;
-    
-    setCurrentPage(page);
-    updateURL(page, perPage);
-    
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Track page change
-    trackPaginationEvent('page_change', { from: currentPage, to: page });
-  }, [currentPage, totalPages, perPage, updateURL]);
-
-  // Go to next page
-  const nextPage = useCallback(() => {
-    if (currentPage < totalPages) {
-      goToPage(currentPage + 1);
-    }
-  }, [currentPage, totalPages, goToPage]);
-
-  // Go to previous page
-  const prevPage = useCallback(() => {
-    if (currentPage > 1) {
-      goToPage(currentPage - 1);
-    }
-  }, [currentPage, goToPage]);
-
-  // Go to first page
-  const firstPage = useCallback(() => {
-    if (currentPage > 1) {
-      goToPage(1);
-    }
-  }, [currentPage, goToPage]);
-
-  // Go to last page
-  const lastPage = useCallback(() => {
-    if (currentPage < totalPages) {
-      goToPage(totalPages);
-    }
-  }, [currentPage, totalPages, goToPage]);
-
-  // Change items per page
-  const changePerPage = useCallback((newPerPage: number) => {
-    if (newPerPage === perPage || newPerPage < 1) return;
-    
-    const newTotalPages = Math.max(1, Math.ceil(totalItems / newPerPage));
-    const newCurrentPage = Math.min(currentPage, newTotalPages);
-    
-    setPerPage(newPerPage);
-    setCurrentPage(newCurrentPage);
-    updateURL(newCurrentPage, newPerPage);
-    
-    // Track per page change
-    trackPaginationEvent('per_page_change', { 
-      from: perPage, 
-      to: newPerPage,
-      totalPages: newTotalPages,
-    });
-  }, [perPage, currentPage, totalItems, updateURL]);
-
-  // Get pagination buttons to display
-  const getPaginationButtons = useCallback((): number[] => {
-    const buttons: number[] = [];
-    
-    if (totalPages <= MAX_PAGE_BUTTONS) {
-      // Show all pages
-      for (let i = 1; i <= totalPages; i++) {
-        buttons.push(i);
-      }
-    } else {
-      // Show limited pages with ellipsis
-      const leftBound = Math.max(2, currentPage - 2);
-      const rightBound = Math.min(totalPages - 1, currentPage + 2);
-      
-      buttons.push(1);
-      
-      if (leftBound > 2) {
-        buttons.push(-1); // -1 represents ellipsis
-      }
-      
-      for (let i = leftBound; i <= rightBound; i++) {
-        buttons.push(i);
-      }
-      
-      if (rightBound < totalPages - 1) {
-        buttons.push(-1); // -1 represents ellipsis
-      }
-      
-      if (totalPages > 1) {
-        buttons.push(totalPages);
-      }
-    }
-    
-    return buttons;
   }, [currentPage, totalPages]);
 
-  // Get visible items range
-  const getVisibleRange = useCallback(() => {
-    const start = (currentPage - 1) * perPage + 1;
-    const end = Math.min(currentPage * perPage, totalItems);
+  // Call onPageChange callback
+  useEffect(() => {
+    onPageChange?.(currentPage);
+  }, [currentPage, onPageChange]);
+
+  // Call onItemsPerPageChange callback
+  useEffect(() => {
+    onItemsPerPageChange?.(itemsPerPage);
+  }, [itemsPerPage, onItemsPerPageChange]);
+
+  const goToPage = useCallback((page: number) => {
+    const validPage = Math.max(1, Math.min(page, totalPages));
+    setCurrentPage(validPage);
+  }, [totalPages]);
+
+  const nextPage = useCallback(() => {
+    if (hasNextPage) {
+      setCurrentPage(prev => prev + 1);
+    }
+  }, [hasNextPage]);
+
+  const previousPage = useCallback(() => {
+    if (hasPreviousPage) {
+      setCurrentPage(prev => prev - 1);
+    }
+  }, [hasPreviousPage]);
+
+  const firstPage = useCallback(() => {
+    setCurrentPage(1);
+  }, []);
+
+  const lastPage = useCallback(() => {
+    setCurrentPage(totalPages);
+  }, [totalPages]);
+
+  const updateItemsPerPage = useCallback((newItemsPerPage: number) => {
+    const validItemsPerPage = Math.max(1, newItemsPerPage);
+    setItemsPerPage(validItemsPerPage);
     
-    return {
-      start,
-      end,
-      total: totalItems,
-      hasItems: totalItems > 0,
-    };
-  }, [currentPage, perPage, totalItems]);
+    // Recalculate current page to maintain position
+    const newStartIndex = (currentPage - 1) * validItemsPerPage;
+    const newCurrentPage = Math.floor(newStartIndex / validItemsPerPage) + 1;
+    setCurrentPage(newCurrentPage);
+  }, [currentPage]);
 
-  // Get pagination params for API calls
-  const getPaginationParams = useCallback((): PaginationParams => {
-    return {
-      page: currentPage,
-      perPage,
-      offset: (currentPage - 1) * perPage,
-    };
-  }, [currentPage, perPage]);
+  const getPageItems = useCallback(<T>(items: T[]): T[] => {
+    return items.slice(startIndex, endIndex);
+  }, [startIndex, endIndex]);
 
-  // Check if pagination is needed
-  const isPaginationNeeded = totalItems > perPage;
+  const getPageInfo = useCallback(() => ({
+    from: totalItems > 0 ? startIndex + 1 : 0,
+    to: endIndex,
+    total: totalItems,
+  }), [startIndex, endIndex, totalItems]);
 
   return {
-    // State
     currentPage,
     totalPages,
-    perPage,
+    itemsPerPage,
     totalItems,
-    
-    // Actions
+    startIndex,
+    endIndex,
+    hasPreviousPage,
+    hasNextPage,
+    pages,
     goToPage,
     nextPage,
-    prevPage,
+    previousPage,
     firstPage,
     lastPage,
-    changePerPage,
-    
-    // Helpers
-    getPaginationButtons,
-    getVisibleRange,
-    getPaginationParams,
-    isPaginationNeeded,
-    
-    // Status
-    hasNextPage: currentPage < totalPages,
-    hasPrevPage: currentPage > 1,
-    isFirstPage: currentPage === 1,
-    isLastPage: currentPage === totalPages,
-    
-    // For displaying
-    visibleRange: getVisibleRange(),
-    paginationButtons: getPaginationButtons(),
+    setItemsPerPage: updateItemsPerPage,
+    getPageItems,
+    getPageInfo,
   };
 }
 
-// Hook for WordPress-specific pagination
-export function useWordPressPagination(
-  totalItems: number,
-  initialPage: number = 1,
-  itemsPerPage: number = DEFAULT_PER_PAGE
-) {
-  const pagination = usePagination(totalItems, initialPage, itemsPerPage);
-  
-  // WordPress-specific pagination logic
-  const getWordPressPaginationParams = useCallback(() => {
-    const params = pagination.getPaginationParams();
-    
-    return {
-      page: params.page,
-      per_page: params.perPage,
-      offset: params.offset,
-    };
-  }, [pagination]);
-  
-  // Get pagination result for API response
-  const getPaginationResult = useCallback((): PaginationResult => {
-    return {
-      page: pagination.currentPage,
-      perPage: pagination.perPage,
-      totalPages: pagination.totalPages,
-      totalItems: pagination.totalItems,
-      hasNextPage: pagination.hasNextPage,
-      hasPrevPage: pagination.hasPrevPage,
-    };
-  }, [pagination]);
-  
-  return {
-    ...pagination,
-    getWordPressPaginationParams,
-    getPaginationResult,
-  };
+export interface UseInfiniteScrollOptions<T> {
+  items: T[];
+  itemsPerPage?: number;
+  threshold?: number;
+  onLoadMore?: () => Promise<void> | void;
+  hasMore?: boolean;
+  isLoading?: boolean;
 }
 
-// Hook for infinite scroll pagination
-export function useInfinitePagination(
-  fetchMore: () => Promise<any>,
-  hasMore: boolean,
-  isLoading: boolean
-) {
-  const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  
-  const loadMore = useCallback(async () => {
-    if (!hasMore || isLoading || isFetching) return;
-    
-    setIsFetching(true);
-    setError(null);
-    
-    try {
-      await fetchMore();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load more');
-    } finally {
-      setIsFetching(false);
-    }
-  }, [hasMore, isLoading, isFetching, fetchMore]);
-  
-  // Auto-load when scrolling to bottom
+export function useInfiniteScroll<T>(options: UseInfiniteScrollOptions<T>) {
+  const {
+    items,
+    itemsPerPage = 10,
+    threshold = 100,
+    onLoadMore,
+    hasMore = true,
+    isLoading = false,
+  } = options;
+
+  const [page, setPage] = useState(1);
+  const [visibleItems, setVisibleItems] = useState<T[]>([]);
+
+  // Calculate visible items based on current page
   useEffect(() => {
+    const endIndex = page * itemsPerPage;
+    setVisibleItems(items.slice(0, endIndex));
+  }, [items, page, itemsPerPage]);
+
+  const loadMore = useCallback(async () => {
+    if (!hasMore || isLoading) return;
+
+    if (onLoadMore) {
+      await onLoadMore();
+    }
+    setPage(prev => prev + 1);
+  }, [hasMore, isLoading, onLoadMore]);
+
+  // Set up intersection observer for infinite scroll
+  useEffect(() => {
+    if (!hasMore || isLoading) return;
+
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      
-      // Load more when 80% scrolled
-      if (scrollTop + windowHeight >= documentHeight * 0.8) {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight || window.innerHeight;
+
+      if (scrollTop + clientHeight >= scrollHeight - threshold) {
         loadMore();
       }
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loadMore]);
-  
+  }, [hasMore, isLoading, loadMore, threshold]);
+
+  const reset = useCallback(() => {
+    setPage(1);
+    setVisibleItems(items.slice(0, itemsPerPage));
+  }, [items, itemsPerPage]);
+
   return {
-    loadMore,
-    isFetching,
-    error,
+    visibleItems,
+    page,
     hasMore,
+    isLoading,
+    loadMore,
+    reset,
   };
 }
 
-function trackPaginationEvent(action: string, data?: any) {
-  if (window.gtag) {
-    window.gtag('event', 'pagination', {
-      event_category: 'navigation',
-      event_label: action,
-      ...data,
-    });
-  }
+export interface UseURLPaginationOptions {
+  pageParam?: string;
+  itemsPerPageParam?: string;
+  defaultItemsPerPage?: number;
+  preserveParams?: boolean;
+}
+
+export function useURLPagination(
+  options: UseURLPaginationOptions = {},
+  paginationOptions: Omit<PaginationOptions, 'initialPage' | 'itemsPerPage'>
+) {
+  const {
+    pageParam = 'page',
+    itemsPerPageParam = 'per_page',
+    defaultItemsPerPage = 10,
+    preserveParams = true,
+  } = options;
+
+  // Get initial values from URL
+  const getInitialValues = () => {
+    if (typeof window === 'undefined') {
+      return { page: 1, itemsPerPage: defaultItemsPerPage };
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const page = parseInt(params.get(pageParam) || '1', 10);
+    const itemsPerPage = parseInt(params.get(itemsPerPageParam) || defaultItemsPerPage.toString(), 10);
+
+    return {
+      page: isNaN(page) || page < 1 ? 1 : page,
+      itemsPerPage: isNaN(itemsPerPage) || itemsPerPage < 1 ? defaultItemsPerPage : itemsPerPage,
+    };
+  };
+
+  const initialValues = getInitialValues();
+
+  const pagination = usePagination({
+    ...paginationOptions,
+    initialPage: initialValues.page,
+    itemsPerPage: initialValues.itemsPerPage,
+  });
+
+  // Update URL when pagination changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const params = new URLSearchParams(preserveParams ? window.location.search : '');
+
+    if (pagination.currentPage > 1) {
+      params.set(pageParam, pagination.currentPage.toString());
+    } else {
+      params.delete(pageParam);
+    }
+
+    if (pagination.itemsPerPage !== defaultItemsPerPage) {
+      params.set(itemsPerPageParam, pagination.itemsPerPage.toString());
+    } else {
+      params.delete(itemsPerPageParam);
+    }
+
+    const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+    
+    // Use replaceState to update URL without reloading
+    window.history.replaceState({}, '', newUrl);
+  }, [
+    pagination.currentPage,
+    pagination.itemsPerPage,
+    pageParam,
+    itemsPerPageParam,
+    defaultItemsPerPage,
+    preserveParams,
+  ]);
+
+  return pagination;
+}
+
+export interface PaginationControlsProps {
+  pagination: PaginationReturn;
+  showFirstLast?: boolean;
+  showPrevNext?: boolean;
+  showPageNumbers?: boolean;
+  showItemsPerPage?: boolean;
+  itemsPerPageOptions?: number[];
+  className?: string;
+}
+
+export function usePaginationControls(props: PaginationControlsProps) {
+  const {
+    pagination,
+    showFirstLast = true,
+    showPrevNext = true,
+    showPageNumbers = true,
+    showItemsPerPage = true,
+    itemsPerPageOptions = [10, 20, 50, 100],
+    className = '',
+  } = props;
+
+  const pageInfo = pagination.getPageInfo();
+
+  const controls = {
+    canGoFirst: pagination.hasPreviousPage,
+    canGoPrev: pagination.hasPreviousPage,
+    canGoNext: pagination.hasNextPage,
+    canGoLast: pagination.hasNextPage,
+    pageNumbers: pagination.pages,
+    currentPage: pagination.currentPage,
+    totalPages: pagination.totalPages,
+    itemsPerPage: pagination.itemsPerPage,
+    pageInfo,
+  };
+
+  const handlers = {
+    goToPage: pagination.goToPage,
+    goToFirst: pagination.firstPage,
+    goToPrev: pagination.previousPage,
+    goToNext: pagination.nextPage,
+    goToLast: pagination.lastPage,
+    setItemsPerPage: pagination.setItemsPerPage,
+  };
+
+  const getControlProps = () => ({
+    showFirstLast,
+    showPrevNext,
+    showPageNumbers,
+    showItemsPerPage,
+    itemsPerPageOptions,
+    className,
+  });
+
+  return {
+    controls,
+    handlers,
+    getControlProps,
+  };
 }
