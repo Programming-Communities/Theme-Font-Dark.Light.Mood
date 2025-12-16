@@ -1,0 +1,405 @@
+/* components/wordpress/CommentsSection.module.css */
+.commentsSection {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+  border: 1px solid var(--border-color);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.addCommentButton {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.addCommentButton:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+/* Comment Form */
+.commentForm {
+  background: var(--bg-secondary);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-xl);
+  border: 1px solid var(--border-color);
+}
+
+.formTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.replyNotice {
+  background: var(--info-bg);
+  color: var(--info-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancelReplyButton {
+  background: transparent;
+  color: var(--info-color);
+  border: 1px solid currentColor;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cancelReplyButton:hover {
+  background: var(--info-color);
+  color: white;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.formGroup {
+  margin-bottom: var(--spacing-md);
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast);
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-shadow);
+}
+
+.input:disabled,
+.textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.errorMessage {
+  background: var(--error-bg);
+  color: var(--error-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--error-border);
+}
+
+.formActions {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.submitButton {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Comments List */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  gap: var(--spacing-md);
+  color: var(--text-secondary);
+}
+
+.noComments {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-secondary);
+}
+
+.noComments p {
+  margin-bottom: var(--spacing-md);
+}
+
+.commentsList {
+  margin-top: var(--spacing-lg);
+}
+
+/* Individual Comment */
+.comment {
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.comment.reply {
+  background: var(--bg-tertiary);
+  border-left: 3px solid var(--primary-color);
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.authorInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+}
+
+.authorMeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.authorName {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.authorWebsite {
+  color: var(--primary-color);
+  font-size: var(--font-size-xs);
+  text-decoration: none;
+}
+
+.authorWebsite:hover {
+  text-decoration: underline;
+}
+
+.commentMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.commentDate::before {
+  content: '📅 ';
+  margin-right: var(--spacing-xs);
+}
+
+.replyButton {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.replyButton:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.commentContent {
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.commentContent p {
+  margin-bottom: var(--spacing-sm);
+}
+
+.commentContent a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.commentContent a:hover {
+  text-decoration: underline;
+}
+
+.replies {
+  margin-top: var(--spacing-md);
+  padding-left: var(--spacing-md);
+  border-left: 2px solid var(--border-color);
+}
+
+/* Guidelines */
+.guidelines {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+}
+
+.guidelinesTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.guidelinesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.guidelinesList li {
+  margin-bottom: var(--spacing-xs);
+  padding-left: var(--spacing-md);
+  position: relative;
+}
+
+.guidelinesList li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .commentsSection {
+    padding: var(--spacing-md);
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+  
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .formActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .commentHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .replies {
+    padding-left: var(--spacing-sm);
+  }
+}
+
+/* Dark mode adjustments */
+.dark .commentForm,
+.dark .comment,
+.dark .comment.reply {
+  background: var(--card-bg-dark);
+  border-color: var(--border-color-dark);
+}
+
+.dark .input,
+.dark .textarea {
+  background: var(--input-bg-dark);
+  border-color: var(--border-color-dark);
+  color: var(--text-primary-dark);
+}
