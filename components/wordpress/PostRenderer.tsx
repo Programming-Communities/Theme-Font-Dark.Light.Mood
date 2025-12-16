@@ -3,10 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from '@/components/theme/contexts/ThemeContext';
 import { WordPressPost } from '@/types/wordpress';
-import LoadingSpinner from '@/components/utils/LoadingSpinner';
-import { formatDate, stripHTML, truncateText } from '@/utils/helpers';
 import styles from './PostRenderer.module.css';
 
 interface PostRendererProps {
@@ -19,6 +17,26 @@ interface PostRendererProps {
   showTags?: boolean;
   maxLength?: number;
 }
+
+// Helper functions
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-PK', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+const stripHTML = (html: string): string => {
+  return html.replace(/<[^>]*>/g, '');
+};
+
+const truncateText = (text: string, maxLength: number = 150): string => {
+  if (!text) return '';
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength).trim() + '...';
+};
 
 const PostRenderer: React.FC<PostRendererProps> = ({
   post,
@@ -35,20 +53,17 @@ const PostRenderer: React.FC<PostRendererProps> = ({
   const [content, setContent] = useState<string>('');
 
   useEffect(() => {
-    // Process WordPress content
     const processContent = async () => {
       setIsLoading(true);
       
       let processedContent = isExcerpt ? post.excerpt.rendered : post.content.rendered;
       
-      // Remove unnecessary WordPress shortcodes and format content
       processedContent = processedContent
-        .replace(/\[.*?\]/g, '') // Remove shortcodes
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove scripts
-        .replace(/style="[^"]*"/g, '') // Remove inline styles
+        .replace(/\[.*?\]/g, '')
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/style="[^"]*"/g, '')
         .trim();
 
-      // Apply truncation if needed
       if (isExcerpt && maxLength > 0) {
         const plainText = stripHTML(processedContent);
         if (plainText.length > maxLength) {
@@ -65,7 +80,7 @@ const PostRenderer: React.FC<PostRendererProps> = ({
 
   // Get featured image URL
   const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 
-                       post.featured_media_url || 
+                       post.featuredMediaUrl || 
                        `/api/placeholder/800/400?theme=${theme}`;
 
   // Get author info
@@ -81,7 +96,7 @@ const PostRenderer: React.FC<PostRendererProps> = ({
   const tags = post._embedded?.['wp:term']?.[1] || post.tags || [];
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <div className="spinner">Loading...</div>;
   }
 
   return (
@@ -110,7 +125,10 @@ const PostRenderer: React.FC<PostRendererProps> = ({
           {showAuthor && (
             <div className={styles.authorInfo}>
               <span className={styles.byText}>By</span>
-              <Link href={`/author/${author.slug}`} className={styles.authorLink}>
+              <Link 
+                href={`/author/${author.slug || (author as any).id || 'unknown'}`} 
+                className={styles.authorLink}
+              >
                 {author.name}
               </Link>
             </div>
@@ -144,7 +162,7 @@ const PostRenderer: React.FC<PostRendererProps> = ({
           <div className={styles.categories}>
             <span className={styles.footerLabel}>Categories:</span>
             <div className={styles.categoryList}>
-              {categories.map((cat: any) => (
+              {Array.isArray(categories) && categories.map((cat: any) => (
                 <Link 
                   key={cat.id || cat} 
                   href={`/category/${cat.slug || cat}`}
@@ -161,7 +179,7 @@ const PostRenderer: React.FC<PostRendererProps> = ({
           <div className={styles.tags}>
             <span className={styles.footerLabel}>Tags:</span>
             <div className={styles.tagList}>
-              {tags.map((tag: any) => (
+              {Array.isArray(tags) && tags.map((tag: any) => (
                 <Link 
                   key={tag.id || tag} 
                   href={`/tag/${tag.slug || tag}`}

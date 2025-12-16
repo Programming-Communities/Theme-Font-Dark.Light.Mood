@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from '@/components/theme/contexts/ThemeContext';
 import { WordPressMedia } from '@/types/wordpress';
-import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import styles from './MediaGallery.module.css';
 
 interface MediaGalleryProps {
@@ -73,7 +72,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
   const handleImageClick = (index: number) => {
     if (showLightbox) {
       setSelectedImage(index);
-      document.body.style.overflow = 'hidden'; // Prevent scrolling
+      document.body.style.overflow = 'hidden';
     }
   };
 
@@ -88,13 +87,15 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
     if (selectedImage === null) return;
     
     if (direction === 'prev') {
-      setSelectedImage(prev => 
-        prev === 0 ? media.length - 1 : prev - 1
-      );
+      setSelectedImage(prev => {
+        if (prev === null) return media.length - 1;
+        return prev === 0 ? media.length - 1 : prev - 1;
+      });
     } else {
-      setSelectedImage(prev => 
-        prev === media.length - 1 ? 0 : prev + 1
-      );
+      setSelectedImage(prev => {
+        if (prev === null) return 0;
+        return prev === media.length - 1 ? 0 : prev + 1;
+      });
     }
   };
 
@@ -121,7 +122,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
   }, [selectedImage, showLightbox]);
 
   // Calculate pagination
-  const itemsPerPage = columns * 3; // Show 3 rows initially
+  const itemsPerPage = columns * 3;
   const totalPages = Math.ceil(media.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -130,7 +131,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
-        <LoadingSpinner />
+        <div className="spinner">Loading...</div>
         <p>Loading media...</p>
       </div>
     );
@@ -186,9 +187,9 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
         } as React.CSSProperties}
       >
         {paginatedMedia.map((item, index) => {
-          const mediaUrl = item.source_url || item.media_details?.sizes?.full?.source_url;
-          const thumbnailUrl = item.media_details?.sizes?.medium?.source_url || mediaUrl;
-          const altText = item.alt_text || item.title?.rendered || 'Media item';
+          const mediaUrl = item.source_url || item.sourceUrl || item.media_details?.sizes?.full?.source_url;
+          const thumbnailUrl = item.media_details?.sizes?.medium?.source_url || mediaUrl || `/api/placeholder/300/200?theme=${theme}`;
+          const altText = item.alt_text || item.altText || item.title?.rendered || 'Media item';
           const caption = item.caption?.rendered || '';
           
           return (
@@ -199,7 +200,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
             >
               <div className={styles.imageContainer}>
                 <Image
-                  src={thumbnailUrl || `/api/placeholder/300/200?theme=${theme}`}
+                  src={thumbnailUrl}
                   alt={altText}
                   width={300}
                   height={200}
@@ -321,8 +322,8 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
             
             <div className={styles.lightboxImageContainer}>
               <Image
-                src={media[selectedImage].source_url || `/api/placeholder/800/600?theme=${theme}`}
-                alt={media[selectedImage].alt_text || 'Media'}
+                src={media[selectedImage].source_url || media[selectedImage].sourceUrl || `/api/placeholder/800/600?theme=${theme}`}
+                alt={media[selectedImage].alt_text || media[selectedImage].altText || 'Media'}
                 width={800}
                 height={600}
                 className={styles.lightboxImage}

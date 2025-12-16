@@ -34,11 +34,11 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   } = options || {};
 
   const callbackRef = useRef(callback);
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const maxWaitTimeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const maxWaitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastCallTimeRef = useRef<number>(0);
   const lastInvokeTimeRef = useRef<number>(0);
-  const pendingArgsRef = useRef<any[]>();
+  const pendingArgsRef = useRef<any[] | undefined>(undefined);
 
   // Update callback ref when callback changes
   useEffect(() => {
@@ -61,7 +61,9 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
     const args = pendingArgsRef.current;
     pendingArgsRef.current = undefined;
     lastInvokeTimeRef.current = time;
-    callbackRef.current(...(args || []));
+    if (args) {
+      callbackRef.current(...args);
+    }
   }, []);
 
   const startTimer = useCallback((timerCallback: () => void, waitTime: number) => {
@@ -75,8 +77,6 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
     const timeSinceLastCall = time - lastCallTimeRef.current;
     const timeSinceLastInvoke = time - lastInvokeTimeRef.current;
 
-    // Either this is the first call, or time since last call is greater than delay,
-    // or time since last invoke is greater than maxWait
     return (
       lastCallTimeRef.current === 0 ||
       timeSinceLastCall >= delay ||
@@ -85,9 +85,8 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   }, [delay, maxWait]);
 
   const trailingEdge = useCallback((time: number) => {
-    timeoutRef.current = undefined;
+    timeoutRef.current = null;
 
-    // Only invoke if we have pending args (meaning the function was called at least once)
     if (trailing && pendingArgsRef.current) {
       invokeCallback(time);
     }
@@ -98,7 +97,6 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
     if (shouldInvoke(time)) {
       trailingEdge(time);
     } else {
-      // Restart the timer
       const timeSinceLastCall = time - lastCallTimeRef.current;
       const timeSinceLastInvoke = time - lastInvokeTimeRef.current;
       const timeWaiting = delay - timeSinceLastCall;
@@ -118,16 +116,13 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
     lastCallTimeRef.current = time;
 
     if (isInvoking) {
-      if (timeoutRef.current === undefined) {
-        // Leading edge
+      if (timeoutRef.current === null) {
         if (leading) {
           invokeCallback(time);
         }
 
-        // Start timer for trailing edge
         startTimer(timerExpired, delay);
 
-        // Start maxWait timer if specified
         if (maxWait !== undefined) {
           if (maxWaitTimeoutRef.current) {
             clearTimeout(maxWaitTimeoutRef.current);
@@ -140,8 +135,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
           }, maxWait);
         }
       }
-    } else if (timeoutRef.current === undefined) {
-      // Start timer for next call
+    } else if (timeoutRef.current === null) {
       startTimer(timerExpired, delay);
     }
   }, [delay, maxWait, leading, shouldInvoke, invokeCallback, startTimer, timerExpired]) as T;
@@ -149,11 +143,11 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   const cancel = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
-      timeoutRef.current = undefined;
+      timeoutRef.current = null;
     }
     if (maxWaitTimeoutRef.current) {
       clearTimeout(maxWaitTimeoutRef.current);
-      maxWaitTimeoutRef.current = undefined;
+      maxWaitTimeoutRef.current = null;
     }
     pendingArgsRef.current = undefined;
     lastCallTimeRef.current = 0;
@@ -163,7 +157,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   const flush = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
-      timeoutRef.current = undefined;
+      timeoutRef.current = null;
     }
     if (pendingArgsRef.current) {
       const time = Date.now();
@@ -187,7 +181,6 @@ export function useDebouncedEffect(
     return () => {
       clearTimeout(handler);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...deps, delay]);
 }
 
@@ -294,9 +287,9 @@ export function useThrottle<T extends (...args: any[]) => any>(
 ): T {
   const { leading = true, trailing = true } = options;
   const callbackRef = useRef(callback);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastCallTimeRef = useRef<number>(0);
-  const pendingArgsRef = useRef<any[]>();
+  const pendingArgsRef = useRef<any[] | undefined>(undefined);
 
   // Update callback ref when callback changes
   useEffect(() => {
@@ -319,24 +312,22 @@ export function useThrottle<T extends (...args: any[]) => any>(
     pendingArgsRef.current = args;
 
     if (timeSinceLastCall >= wait) {
-      // Enough time has passed, call immediately
       if (leading) {
         callbackRef.current(...args);
       }
       lastCallTimeRef.current = now;
 
-      // Clear any pending trailing call
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
-        timeoutRef.current = undefined;
+        timeoutRef.current = null;
       }
     } else if (trailing && !timeoutRef.current) {
-      // Schedule a trailing call
       const remainingWait = wait - timeSinceLastCall;
       timeoutRef.current = setTimeout(() => {
-        callbackRef.current(...(pendingArgsRef.current || []));
+        const argsToUse = pendingArgsRef.current || [];
+        callbackRef.current(...argsToUse);
         lastCallTimeRef.current = Date.now();
-        timeoutRef.current = undefined;
+        timeoutRef.current = null;
       }, remainingWait);
     }
   }, [wait, leading, trailing]) as T;
@@ -347,28 +338,26 @@ export function useThrottle<T extends (...args: any[]) => any>(
 export function useThrottledValue<T>(value: T, wait: number): T {
   const [throttledValue, setThrottledValue] = useState<T>(value);
   const lastUpdateTimeRef = useRef<number>(0);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const now = Date.now();
     const timeSinceLastUpdate = now - lastUpdateTimeRef.current;
 
     if (timeSinceLastUpdate >= wait) {
-      // Update immediately if enough time has passed
       setThrottledValue(value);
       lastUpdateTimeRef.current = now;
       
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
-        timeoutRef.current = undefined;
+        timeoutRef.current = null;
       }
     } else if (!timeoutRef.current) {
-      // Schedule update
       const remainingWait = wait - timeSinceLastUpdate;
       timeoutRef.current = setTimeout(() => {
         setThrottledValue(value);
         lastUpdateTimeRef.current = Date.now();
-        timeoutRef.current = undefined;
+        timeoutRef.current = null;
       }, remainingWait);
     }
 

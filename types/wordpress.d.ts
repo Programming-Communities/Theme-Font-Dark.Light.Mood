@@ -1,5 +1,5 @@
-// types/wordpress.d.ts
-// FIXED VERSION
+// File: types/wordpress.d.ts
+// COMPLETE FIXED VERSION
 
 export interface WordPressPost {
   id: number;
@@ -32,16 +32,22 @@ export interface WordPressPost {
   meta: Record<string, unknown>;
   categories: number[];
   tags: number[];
+  comment_count?: number;
+  
   _embedded?: {
     author?: WordPressUser[];
     "wp:featuredmedia"?: WordPressMedia[];
     "wp:term"?: Array<WordPressTerm[]>;
   };
+  
   // Alias properties for easier access
   featuredMedia?: number;
   featuredMediaUrl?: string;
   excerptText?: string;
   contentText?: string;
+  author_name?: string;
+  view_count?: number;
+  like_count?: number;
 }
 
 export interface WordPressMedia {
@@ -58,6 +64,9 @@ export interface WordPressMedia {
   caption: {
     rendered: string;
   };
+  description?: {
+    rendered: string;
+  };
   alt_text: string;
   media_type: string;
   mime_type: string;
@@ -66,6 +75,7 @@ export interface WordPressMedia {
     width: number;
     height: number;
     file: string;
+    filesize?: number;
     sizes: {
       [key: string]: {
         file: string;
@@ -76,6 +86,7 @@ export interface WordPressMedia {
       };
     };
   };
+  
   // Alias properties
   altText?: string;
   mediaType?: string;
@@ -85,6 +96,7 @@ export interface WordPressMedia {
     width: number;
     height: number;
     file: string;
+    filesize?: number;
     sizes: {
       [key: string]: {
         file: string;
@@ -109,6 +121,7 @@ export interface WordPressUser {
     48: string;
     96: string;
   };
+  
   // Alias properties
   avatarUrls?: {
     24: string;
@@ -177,4 +190,26 @@ export interface WordPressMenuItem {
   invalid: boolean;
   meta: Record<string, unknown>;
   children?: WordPressMenuItem[];
+}
+
+export interface WordPressQueryParams {
+  per_page?: number;
+  page?: number;
+  search?: string;
+  categories?: number[];
+  tags?: number[];
+  author?: number;
+  order?: 'asc' | 'desc';
+  orderby?: string;
+  status?: string;
+  slug?: string;
+  include?: number[];
+  post?: number;
+}
+
+export interface WordPressResponse<T> {
+  data: T;
+  total?: number;
+  totalPages?: number;
+  page?: number;
 }
