@@ -1,57 +1,1047 @@
-/* styles/theme.css - PREVIEW OF 14 THEMES STRUCTURE */
+/* File 55: styles/theme.css */
+/* 
+ * Theme System for English Communities PK
+ * 14 Themes with Dark/Light Modes
+ */
 
 :root {
-  /* Base theme (professional-blue) */
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --primary-light: #93c5fd;
-  --secondary: #10b981;
-  --secondary-dark: #059669;
-  --secondary-light: #34d399;
-  --background: #ffffff;
-  --surface: #f9fafb;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --border: #e5e7eb;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --shadow: rgba(0, 0, 0, 0.1);
+  /* CSS Variables Base */
+  --radius: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  
+  /* Animation Durations */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  
+  /* Animation Timing Functions */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Spacing Scale */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+  --space-40: 10rem;
+  --space-48: 12rem;
+  --space-56: 14rem;
+  --space-64: 16rem;
+  
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+  --text-7xl: 4.5rem;
+  --text-8xl: 6rem;
+  --text-9xl: 8rem;
 }
 
-/* Dark mode override */
-.dark {
-  --primary: #60a5fa;
-  --primary-dark: #3b82f6;
-  --primary-light: #93c5fd;
-  --secondary: #34d399;
-  --secondary-dark: #10b981;
-  --secondary-light: #6ee7b7;
-  --background: #111827;
-  --surface: #1f2937;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --border: #374151;
-  --success: #34d399;
-  --warning: #fbbf24;
-  --error: #f87171;
-  --shadow: rgba(0, 0, 0, 0.3);
-}
-
-/* Theme classes for all 14 themes */
+/* ================================
+   THEME 1: PROFESSIONAL BLUE
+   ================================ */
 .theme-professional-blue {
-  --primary: #3b82f6;
-  --secondary: #10b981;
+  /* Light Mode Variables */
+  --primary: 59 130 246; /* #3b82f6 */
+  --primary-dark: 37 99 235; /* #2563eb */
+  --secondary: 16 185 129; /* #10b981 */
+  --accent: 139 92 246; /* #8b5cf6 */
+  --background: 255 255 255; /* #ffffff */
+  --foreground: 31 41 55; /* #1f2937 */
+  --card: 249 250 251; /* #f9fafb */
+  --card-foreground: 31 41 55; /* #1f2937 */
+  --popover: 255 255 255; /* #ffffff */
+  --popover-foreground: 31 41 55; /* #1f2937 */
+  --muted: 243 244 246; /* #f3f4f6 */
+  --muted-foreground: 107 114 128; /* #6b7280 */
+  --border: 229 231 235; /* #e5e7eb */
+  --input: 255 255 255; /* #ffffff */
+  --ring: 59 130 246; /* #3b82f6 */
+  --destructive: 239 68 68; /* #ef4444 */
+  --destructive-foreground: 255 255 255; /* #ffffff */
+  --success: 16 185 129; /* #10b981 */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 59 130 246; /* #3b82f6 */
+  
+  /* Gradient Variables */
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --gradient-secondary: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
 }
 
+.dark .theme-professional-blue {
+  /* Dark Mode Variables */
+  --primary: 96 165 250; /* #60a5fa */
+  --primary-dark: 59 130 246; /* #3b82f6 */
+  --secondary: 52 211 153; /* #34d399 */
+  --accent: 167 139 250; /* #a78bfa */
+  --background: 15 23 42; /* #0f172a */
+  --foreground: 248 250 252; /* #f8fafc */
+  --card: 30 41 59; /* #1e293b */
+  --card-foreground: 241 245 249; /* #f1f5f9 */
+  --popover: 30 41 59; /* #1e293b */
+  --popover-foreground: 241 245 249; /* #f1f5f9 */
+  --muted: 51 65 85; /* #334155 */
+  --muted-foreground: 148 163 184; /* #94a3b8 */
+  --border: 71 85 105; /* #475569 */
+  --input: 30 41 59; /* #1e293b */
+  --ring: 96 165 250; /* #60a5fa */
+  --destructive: 248 113 113; /* #f87171 */
+  --destructive-foreground: 15 23 42; /* #0f172a */
+  --success: 52 211 153; /* #34d399 */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 96 165 250; /* #60a5fa */
+  
+  /* Gradient Variables for Dark */
+  --gradient-primary: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  --gradient-secondary: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  --gradient-accent: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+}
+
+/* ================================
+   THEME 2: CORPORATE GREEN
+   ================================ */
 .theme-corporate-green {
-  --primary: #059669;
-  --secondary: #3b82f6;
+  /* Light Mode */
+  --primary: 5 150 105; /* #059669 */
+  --primary-dark: 4 120 87; /* #047857 */
+  --secondary: 59 130 246; /* #3b82f6 */
+  --accent: 217 119 6; /* #d97706 */
+  --background: 248 250 252; /* #f8fafc */
+  --foreground: 30 41 59; /* #1e293b */
+  --card: 255 255 255; /* #ffffff */
+  --card-foreground: 30 41 59; /* #1e293b */
+  --popover: 255 255 255; /* #ffffff */
+  --popover-foreground: 30 41 59; /* #1e293b */
+  --muted: 241 245 249; /* #f1f5f9 */
+  --muted-foreground: 100 116 139; /* #64748b */
+  --border: 226 232 240; /* #e2e8f0 */
+  --input: 255 255 255; /* #ffffff */
+  --ring: 5 150 105; /* #059669 */
+  --destructive: 239 68 68; /* #ef4444 */
+  --destructive-foreground: 255 255 255; /* #ffffff */
+  --success: 5 150 105; /* #059669 */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 59 130 246; /* #3b82f6 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #059669 0%, #047857 100%);
+  --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --gradient-accent: linear-gradient(135deg, #d97706 0%, #b45309 100%);
 }
 
+.dark .theme-corporate-green {
+  /* Dark Mode */
+  --primary: 52 211 153; /* #34d399 */
+  --primary-dark: 5 150 105; /* #059669 */
+  --secondary: 96 165 250; /* #60a5fa */
+  --accent: 251 191 36; /* #fbbf24 */
+  --background: 15 23 42; /* #0f172a */
+  --foreground: 241 245 249; /* #f1f5f9 */
+  --card: 30 41 59; /* #1e293b */
+  --card-foreground: 241 245 249; /* #f1f5f9 */
+  --popover: 30 41 59; /* #1e293b */
+  --popover-foreground: 241 245 249; /* #f1f5f9 */
+  --muted: 51 65 85; /* #334155 */
+  --muted-foreground: 148 163 184; /* #94a3b8 */
+  --border: 71 85 105; /* #475569 */
+  --input: 30 41 59; /* #1e293b */
+  --ring: 52 211 153; /* #34d399 */
+  --destructive: 248 113 113; /* #f87171 */
+  --destructive-foreground: 15 23 42; /* #0f172a */
+  --success: 52 211 153; /* #34d399 */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 96 165 250; /* #60a5fa */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #34d399 0%, #059669 100%);
+  --gradient-secondary: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  --gradient-accent: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+}
+
+/* ================================
+   THEME 3: PREMIUM PURPLE
+   ================================ */
 .theme-premium-purple {
-  --primary: #7c3aed;
-  --secondary: #ec4899;
+  /* Light Mode */
+  --primary: 124 58 237; /* #7c3aed */
+  --primary-dark: 109 40 217; /* #6d28d9 */
+  --secondary: 219 39 119; /* #db2777 */
+  --accent: 245 158 11; /* #f59e0b */
+  --background: 250 245 255; /* #faf5ff */
+  --foreground: 30 27 75; /* #1e1b4b */
+  --card: 255 255 255; /* #ffffff */
+  --card-foreground: 30 27 75; /* #1e1b4b */
+  --popover: 255 255 255; /* #ffffff */
+  --popover-foreground: 30 27 75; /* #1e1b4b */
+  --muted: 243 232 255; /* #f3e8ff */
+  --muted-foreground: 124 58 237; /* #7c3aed */
+  --border: 233 213 255; /* #e9d5ff */
+  --input: 255 255 255; /* #ffffff */
+  --ring: 124 58 237; /* #7c3aed */
+  --destructive: 239 68 68; /* #ef4444 */
+  --destructive-foreground: 255 255 255; /* #ffffff */
+  --success: 16 185 129; /* #10b981 */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 139 92 246; /* #8b5cf6 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  --gradient-secondary: linear-gradient(135deg, #db2777 0%, #be185d 100%);
+  --gradient-accent: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
 }
 
-/* ... and 11 more themes following the same pattern */
+.dark .theme-premium-purple {
+  /* Dark Mode */
+  --primary: 167 139 250; /* #a78bfa */
+  --primary-dark: 124 58 237; /* #7c3aed */
+  --secondary: 244 114 182; /* #f472b6 */
+  --accent: 251 191 36; /* #fbbf24 */
+  --background: 30 27 75; /* #1e1b4b */
+  --foreground: 233 213 255; /* #e9d5ff */
+  --card: 49 46 129; /* #312e81 */
+  --card-foreground: 233 213 255; /* #e9d5ff */
+  --popover: 49 46 129; /* #312e81 */
+  --popover-foreground: 233 213 255; /* #e9d5ff */
+  --muted: 76 29 149; /* #4c1d95 */
+  --muted-foreground: 196 181 253; /* #c4b5fd */
+  --border: 91 33 182; /* #5b21b6 */
+  --input: 49 46 129; /* #312e81 */
+  --ring: 167 139 250; /* #a78bfa */
+  --destructive: 248 113 113; /* #f87171 */
+  --destructive-foreground: 30 27 75; /* #1e1b4b */
+  --success: 52 211 153; /* #34d399 */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 167 139 250; /* #a78bfa */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+  --gradient-secondary: linear-gradient(135deg, #f472b6 0%, #db2777 100%);
+  --gradient-accent: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+/* ================================
+   THEME 4: LUXURY GOLD
+   ================================ */
+.theme-luxury-gold {
+  /* Light Mode */
+  --primary: 180 83 9; /* #b45309 */
+  --primary-dark: 146 64 14; /* #92400e */
+  --secondary: 120 53 15; /* #78350f */
+  --accent: 68 64 60; /* #44403c */
+  --background: 254 252 232; /* #fefce8 */
+  --foreground: 41 37 36; /* #292524 */
+  --card: 254 249 195; /* #fef9c3 */
+  --card-foreground: 41 37 36; /* #292524 */
+  --popover: 254 249 195; /* #fef9c3 */
+  --popover-foreground: 41 37 36; /* #292524 */
+  --muted: 253 230 138; /* #fde68a */
+  --muted-foreground: 120 113 108; /* #78716c */
+  --border: 253 224 71; /* #fde047 */
+  --input: 254 249 195; /* #fef9c3 */
+  --ring: 180 83 9; /* #b45309 */
+  --destructive: 185 28 28; /* #b91c1c */
+  --destructive-foreground: 254 252 232; /* #fefce8 */
+  --success: 21 128 61; /* #15803d */
+  --warning: 180 83 9; /* #b45309 */
+  --info: 29 78 216; /* #1d4ed8 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #b45309 0%, #92400e 100%);
+  --gradient-secondary: linear-gradient(135deg, #78350f 0%, #5c280b 100%);
+  --gradient-accent: linear-gradient(135deg, #44403c 0%, #292524 100%);
+}
+
+.dark .theme-luxury-gold {
+  /* Dark Mode */
+  --primary: 245 158 11; /* #f59e0b */
+  --primary-dark: 217 119 6; /* #d97706 */
+  --secondary: 251 191 36; /* #fbbf24 */
+  --accent: 168 162 158; /* #a8a29e */
+  --background: 28 25 23; /* #1c1917 */
+  --foreground: 250 250 249; /* #fafaf9 */
+  --card: 41 37 36; /* #292524 */
+  --card-foreground: 250 250 249; /* #fafaf9 */
+  --popover: 41 37 36; /* #292524 */
+  --popover-foreground: 250 250 249; /* #fafaf9 */
+  --muted: 68 64 60; /* #44403c */
+  --muted-foreground: 168 162 158; /* #a8a29e */
+  --border: 120 113 108; /* #78716c */
+  --input: 41 37 36; /* #292524 */
+  --ring: 245 158 11; /* #f59e0b */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 250 250 249; /* #fafaf9 */
+  --success: 21 128 61; /* #15803d */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 59 130 246; /* #3b82f6 */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gradient-secondary: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  --gradient-accent: linear-gradient(135deg, #a8a29e 0%, #78716c 100%);
+}
+
+/* ================================
+   THEME 5: MINIMAL GRAY
+   ================================ */
+.theme-minimal-gray {
+  /* Light Mode */
+  --primary: 107 114 128; /* #6b7280 */
+  --primary-dark: 75 85 99; /* #4b5563 */
+  --secondary: 156 163 175; /* #9ca3af */
+  --accent: 55 65 81; /* #374151 */
+  --background: 255 255 255; /* #ffffff */
+  --foreground: 17 24 39; /* #111827 */
+  --card: 249 250 251; /* #f9fafb */
+  --card-foreground: 17 24 39; /* #111827 */
+  --popover: 255 255 255; /* #ffffff */
+  --popover-foreground: 17 24 39; /* #111827 */
+  --muted: 243 244 246; /* #f3f4f6 */
+  --muted-foreground: 107 114 128; /* #6b7280 */
+  --border: 229 231 235; /* #e5e7eb */
+  --input: 255 255 255; /* #ffffff */
+  --ring: 107 114 128; /* #6b7280 */
+  --destructive: 239 68 68; /* #ef4444 */
+  --destructive-foreground: 255 255 255; /* #ffffff */
+  --success: 16 185 129; /* #10b981 */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 59 130 246; /* #3b82f6 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  --gradient-secondary: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  --gradient-accent: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+}
+
+.dark .theme-minimal-gray {
+  /* Dark Mode */
+  --primary: 156 163 175; /* #9ca3af */
+  --primary-dark: 107 114 128; /* #6b7280 */
+  --secondary: 209 213 219; /* #d1d5db */
+  --accent: 229 231 235; /* #e5e7eb */
+  --background: 17 24 39; /* #111827 */
+  --foreground: 249 250 251; /* #f9fafb */
+  --card: 31 41 55; /* #1f2937 */
+  --card-foreground: 249 250 251; /* #f9fafb */
+  --popover: 31 41 55; /* #1f2937 */
+  --popover-foreground: 249 250 251; /* #f9fafb */
+  --muted: 55 65 81; /* #374151 */
+  --muted-foreground: 156 163 175; /* #9ca3af */
+  --border: 75 85 99; /* #4b5563 */
+  --input: 31 41 55; /* #1f2937 */
+  --ring: 156 163 175; /* #9ca3af */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 249 250 251; /* #f9fafb */
+  --success: 34 211 153; /* #34d399 */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 96 165 250; /* #60a5fa */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  --gradient-secondary: linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%);
+  --gradient-accent: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+}
+
+/* ================================
+   THEME 6: TECH CYAN
+   ================================ */
+.theme-tech-cyan {
+  /* Light Mode */
+  --primary: 6 182 212; /* #06b6d4 */
+  --primary-dark: 8 145 178; /* #0891b2 */
+  --secondary: 20 184 166; /* #14b8a6 */
+  --accent: 139 92 246; /* #8b5cf6 */
+  --background: 236 254 255; /* #ecfeff */
+  --foreground: 8 51 68; /* #083344 */
+  --card: 204 251 241; /* #ccfbf1 */
+  --card-foreground: 8 51 68; /* #083344 */
+  --popover: 204 251 241; /* #ccfbf1 */
+  --popover-foreground: 8 51 68; /* #083344 */
+  --muted: 165 243 252; /* #a5f3fc */
+  --muted-foreground: 22 78 99; /* #164e63 */
+  --border: 103 232 249; /* #67e8f9 */
+  --input: 204 251 241; /* #ccfbf1 */
+  --ring: 6 182 212; /* #06b6d4 */
+  --destructive: 239 68 68; /* #ef4444 */
+  --destructive-foreground: 236 254 255; /* #ecfeff */
+  --success: 20 184 166; /* #14b8a6 */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 6 182 212; /* #06b6d4 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  --gradient-secondary: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+  --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.dark .theme-tech-cyan {
+  /* Dark Mode */
+  --primary: 103 232 249; /* #67e8f9 */
+  --primary-dark: 6 182 212; /* #06b6d4 */
+  --secondary: 94 234 212; /* #5eead4 */
+  --accent: 167 139 250; /* #a78bfa */
+  --background: 8 51 68; /* #083344 */
+  --foreground: 236 254 255; /* #ecfeff */
+  --card: 12 74 110; /* #0c4a6e */
+  --card-foreground: 236 254 255; /* #ecfeff */
+  --popover: 12 74 110; /* #0c4a6e */
+  --popover-foreground: 236 254 255; /* #ecfeff */
+  --muted: 22 78 99; /* #164e63 */
+  --muted-foreground: 103 232 249; /* #67e8f9 */
+  --border: 8 145 178; /* #0891b2 */
+  --input: 12 74 110; /* #0c4a6e */
+  --ring: 103 232 249; /* #67e8f9 */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 236 254 255; /* #ecfeff */
+  --success: 20 184 166; /* #14b8a6 */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 103 232 249; /* #67e8f9 */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #67e8f9 0%, #06b6d4 100%);
+  --gradient-secondary: linear-gradient(135deg, #5eead4 0%, #14b8a6 100%);
+  --gradient-accent: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+}
+
+/* ================================
+   THEME 7: NATURE GREEN
+   ================================ */
+.theme-nature-green {
+  /* Light Mode */
+  --primary: 34 197 94; /* #22c55e */
+  --primary-dark: 21 128 61; /* #15803d */
+  --secondary: 132 204 22; /* #84cc16 */
+  --accent: 234 179 8; /* #eab308 */
+  --background: 240 253 244; /* #f0fdf4 */
+  --foreground: 20 83 45; /* #14532d */
+  --card: 220 252 231; /* #dcfce7 */
+  --card-foreground: 20 83 45; /* #14532d */
+  --popover: 220 252 231; /* #dcfce7 */
+  --popover-foreground: 20 83 45; /* #14532d */
+  --muted: 187 247 208; /* #bbf7d0 */
+  --muted-foreground: 22 101 52; /* #166534 */
+  --border: 134 239 172; /* #86efac */
+  --input: 220 252 231; /* #dcfce7 */
+  --ring: 34 197 94; /* #22c55e */
+  --destructive: 185 28 28; /* #b91c1c */
+  --destructive-foreground: 240 253 244; /* #f0fdf4 */
+  --success: 34 197 94; /* #22c55e */
+  --warning: 234 179 8; /* #eab308 */
+  --info: 14 165 233; /* #0ea5e9 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+  --gradient-secondary: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
+  --gradient-accent: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+}
+
+.dark .theme-nature-green {
+  /* Dark Mode */
+  --primary: 74 222 128; /* #4ade80 */
+  --primary-dark: 34 197 94; /* #22c55e */
+  --secondary: 163 230 53; /* #a3e635 */
+  --accent: 253 224 71; /* #fde047 */
+  --background: 20 83 45; /* #14532d */
+  --foreground: 220 252 231; /* #dcfce7 */
+  --card: 22 101 52; /* #166534 */
+  --card-foreground: 220 252 231; /* #dcfce7 */
+  --popover: 22 101 52; /* #166534 */
+  --popover-foreground: 220 252 231; /* #dcfce7 */
+  --muted: 21 128 61; /* #15803d */
+  --muted-foreground: 134 239 172; /* #86efac */
+  --border: 34 197 94; /* #22c55e */
+  --input: 22 101 52; /* #166534 */
+  --ring: 74 222 128; /* #4ade80 */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 220 252 231; /* #dcfce7 */
+  --success: 74 222 128; /* #4ade80 */
+  --warning: 253 224 71; /* #fde047 */
+  --info: 56 189 248; /* #38bdf8 */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  --gradient-secondary: linear-gradient(135deg, #a3e635 0%, #84cc16 100%);
+  --gradient-accent: linear-gradient(135deg, #fde047 0%, #eab308 100%);
+}
+
+/* ================================
+   THEME 8: OCEAN BLUE
+   ================================ */
+.theme-ocean-blue {
+  /* Light Mode */
+  --primary: 14 165 233; /* #0ea5e9 */
+  --primary-dark: 2 132 199; /* #0284c7 */
+  --secondary: 6 182 212; /* #06b6d4 */
+  --accent: 124 58 237; /* #7c3aed */
+  --background: 240 249 255; /* #f0f9ff */
+  --foreground: 7 89 133; /* #075985 */
+  --card: 224 242 254; /* #e0f2fe */
+  --card-foreground: 7 89 133; /* #075985 */
+  --popover: 224 242 254; /* #e0f2fe */
+  --popover-foreground: 7 89 133; /* #075985 */
+  --muted: 186 230 253; /* #bae6fd */
+  --muted-foreground: 12 74 110; /* #0c4a6e */
+  --border: 125 211 252; /* #7dd3fc */
+  --input: 224 242 254; /* #e0f2fe */
+  --ring: 14 165 233; /* #0ea5e9 */
+  --destructive: 185 28 28; /* #b91c1c */
+  --destructive-foreground: 240 249 255; /* #f0f9ff */
+  --success: 20 184 166; /* #14b8a6 */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 14 165 233; /* #0ea5e9 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  --gradient-accent: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+.dark .theme-ocean-blue {
+  /* Dark Mode */
+  --primary: 56 189 248; /* #38bdf8 */
+  --primary-dark: 14 165 233; /* #0ea5e9 */
+  --secondary: 103 232 249; /* #67e8f9 */
+  --accent: 167 139 250; /* #a78bfa */
+  --background: 7 89 133; /* #075985 */
+  --foreground: 224 242 254; /* #e0f2fe */
+  --card: 12 74 110; /* #0c4a6e */
+  --card-foreground: 224 242 254; /* #e0f2fe */
+  --popover: 12 74 110; /* #0c4a6e */
+  --popover-foreground: 224 242 254; /* #e0f2fe */
+  --muted: 8 145 178; /* #0891b2 */
+  --muted-foreground: 125 211 252; /* #7dd3fc */
+  --border: 14 165 233; /* #0ea5e9 */
+  --input: 12 74 110; /* #0c4a6e */
+  --ring: 56 189 248; /* #38bdf8 */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 224 242 254; /* #e0f2fe */
+  --success: 20 184 166; /* #14b8a6 */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 56 189 248; /* #38bdf8 */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  --gradient-secondary: linear-gradient(135deg, #67e8f9 0%, #06b6d4 100%);
+  --gradient-accent: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+}
+
+/* ================================
+   THEME 9: SUNSET ORANGE
+   ================================ */
+.theme-sunset-orange {
+  /* Light Mode */
+  --primary: 249 115 22; /* #f97316 */
+  --primary-dark: 234 88 12; /* #ea580c */
+  --secondary: 251 146 60; /* #fb923c */
+  --accent: 220 38 38; /* #dc2626 */
+  --background: 255 247 237; /* #fff7ed */
+  --foreground: 124 45 18; /* #7c2d12 */
+  --card: 254 215 170; /* #fed7aa */
+  --card-foreground: 124 45 18; /* #7c2d12 */
+  --popover: 254 215 170; /* #fed7aa */
+  --popover-foreground: 124 45 18; /* #7c2d12 */
+  --muted: 253 186 116; /* #fdba74 */
+  --muted-foreground: 194 65 12; /* #c2410c */
+  --border: 251 146 60; /* #fb923c */
+  --input: 254 215 170; /* #fed7aa */
+  --ring: 249 115 22; /* #f97316 */
+  --destructive: 185 28 28; /* #b91c1c */
+  --destructive-foreground: 255 247 237; /* #fff7ed */
+  --success: 21 128 61; /* #15803d */
+  --warning: 249 115 22; /* #f97316 */
+  --info: 2 132 199; /* #0284c7 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  --gradient-secondary: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  --gradient-accent: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+.dark .theme-sunset-orange {
+  /* Dark Mode */
+  --primary: 253 186 116; /* #fdba74 */
+  --primary-dark: 249 115 22; /* #f97316 */
+  --secondary: 254 215 170; /* #fed7aa */
+  --accent: 248 113 113; /* #f87171 */
+  --background: 124 45 18; /* #7c2d12 */
+  --foreground: 254 215 170; /* #fed7aa */
+  --card: 154 52 18; /* #9a3412 */
+  --card-foreground: 254 215 170; /* #fed7aa */
+  --popover: 154 52 18; /* #9a3412 */
+  --popover-foreground: 254 215 170; /* #fed7aa */
+  --muted: 194 65 12; /* #c2410c */
+  --muted-foreground: 253 186 116; /* #fdba74 */
+  --border: 234 88 12; /* #ea580c */
+  --input: 154 52 18; /* #9a3412 */
+  --ring: 253 186 116; /* #fdba74 */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 254 215 170; /* #fed7aa */
+  --success: 21 128 61; /* #15803d */
+  --warning: 253 186 116; /* #fdba74 */
+  --info: 56 189 248; /* #38bdf8 */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #fdba74 0%, #f97316 100%);
+  --gradient-secondary: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+  --gradient-accent: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+}
+
+/* ================================
+   THEME 10: MIDNIGHT PURPLE
+   ================================ */
+.theme-midnight-purple {
+  /* Light Mode */
+  --primary: 109 40 217; /* #6d28d9 */
+  --primary-dark: 91 33 182; /* #5b21b6 */
+  --secondary: 139 92 246; /* #8b5cf6 */
+  --accent: 192 132 252; /* #c084fc */
+  --background: 250 245 255; /* #faf5ff */
+  --foreground: 76 29 149; /* #4c1d95 */
+  --card: 233 213 255; /* #e9d5ff */
+  --card-foreground: 76 29 149; /* #4c1d95 */
+  --popover: 233 213 255; /* #e9d5ff */
+  --popover-foreground: 76 29 149; /* #4c1d95 */
+  --muted: 216 180 254; /* #d8b4fe */
+  --muted-foreground: 109 40 217; /* #6d28d9 */
+  --border: 192 132 252; /* #c084fc */
+  --input: 233 213 255; /* #e9d5ff */
+  --ring: 109 40 217; /* #6d28d9 */
+  --destructive: 185 28 28; /* #b91c1c */
+  --destructive-foreground: 250 245 255; /* #faf5ff */
+  --success: 124 58 237; /* #7c3aed */
+  --warning: 217 119 6; /* #d97706 */
+  --info: 139 92 246; /* #8b5cf6 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
+  --gradient-secondary: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  --gradient-accent: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+}
+
+.dark .theme-midnight-purple {
+  /* Dark Mode */
+  --primary: 167 139 250; /* #a78bfa */
+  --primary-dark: 139 92 246; /* #8b5cf6 */
+  --secondary: 196 181 253; /* #c4b5fd */
+  --accent: 221 214 254; /* #ddd6fe */
+  --background: 30 27 75; /* #1e1b4b */
+  --foreground: 233 213 255; /* #e9d5ff */
+  --card: 49 46 129; /* #312e81 */
+  --card-foreground: 233 213 255; /* #e9d5ff */
+  --popover: 49 46 129; /* #312e81 */
+  --popover-foreground: 233 213 255; /* #e9d5ff */
+  --muted: 76 29 149; /* #4c1d95 */
+  --muted-foreground: 167 139 250; /* #a78bfa */
+  --border: 109 40 217; /* #6d28d9 */
+  --input: 49 46 129; /* #312e81 */
+  --ring: 167 139 250; /* #a78bfa */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 233 213 255; /* #e9d5ff */
+  --success: 139 92 246; /* #8b5cf6 */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 167 139 250; /* #a78bfa */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+  --gradient-secondary: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 100%);
+  --gradient-accent: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
+}
+
+/* ================================
+   THEME 11: ROSE PINK
+   ================================ */
+.theme-rose-pink {
+  /* Light Mode */
+  --primary: 244 63 94; /* #f43f5e */
+  --primary-dark: 225 29 72; /* #e11d48 */
+  --secondary: 251 113 133; /* #fb7185 */
+  --accent: 244 114 182; /* #f472b6 */
+  --background: 255 241 242; /* #fff1f2 */
+  --foreground: 159 18 57; /* #9f1239 */
+  --card: 255 228 230; /* #ffe4e6 */
+  --card-foreground: 159 18 57; /* #9f1239 */
+  --popover: 255 228 230; /* #ffe4e6 */
+  --popover-foreground: 159 18 57; /* #9f1239 */
+  --muted: 253 164 175; /* #fda4af */
+  --muted-foreground: 190 18 60; /* #be123c */
+  --border: 253 164 175; /* #fda4af */
+  --input: 255 228 230; /* #ffe4e6 */
+  --ring: 244 63 94; /* #f43f5e */
+  --destructive: 185 28 28; /* #b91c1c */
+  --destructive-foreground: 255 241 242; /* #fff1f2 */
+  --success: 21 128 61; /* #15803d */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 244 63 94; /* #f43f5e */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  --gradient-secondary: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%);
+  --gradient-accent: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+}
+
+.dark .theme-rose-pink {
+  /* Dark Mode */
+  --primary: 253 164 175; /* #fda4af */
+  --primary-dark: 251 113 133; /* #fb7185 */
+  --secondary: 254 205 211; /* #fecdd3 */
+  --accent: 251 207 232; /* #fbcfe8 */
+  --background: 136 19 55; /* #881337 */
+  --foreground: 255 228 230; /* #ffe4e6 */
+  --card: 190 18 60; /* #be123c */
+  --card-foreground: 255 228 230; /* #ffe4e6 */
+  --popover: 190 18 60; /* #be123c */
+  --popover-foreground: 255 228 230; /* #ffe4e6 */
+  --muted: 159 18 57; /* #9f1239 */
+  --muted-foreground: 253 164 175; /* #fda4af */
+  --border: 225 29 72; /* #e11d48 */
+  --input: 190 18 60; /* #be123c */
+  --ring: 253 164 175; /* #fda4af */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 255 228 230; /* #ffe4e6 */
+  --success: 34 197 94; /* #22c55e */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 253 164 175; /* #fda4af */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #fda4af 0%, #fb7185 100%);
+  --gradient-secondary: linear-gradient(135deg, #fecdd3 0%, #fda4af 100%);
+  --gradient-accent: linear-gradient(135deg, #fbcfe8 0%, #f9a8d4 100%);
+}
+
+/* ================================
+   THEME 12: VIBRANT RED
+   ================================ */
+.theme-vibrant-red {
+  /* Light Mode */
+  --primary: 220 38 38; /* #dc2626 */
+  --primary-dark: 185 28 28; /* #b91c1c */
+  --secondary: 239 68 68; /* #ef4444 */
+  --accent: 249 115 22; /* #f97316 */
+  --background: 254 242 242; /* #fef2f2 */
+  --foreground: 127 29 29; /* #7f1d1d */
+  --card: 254 226 226; /* #fee2e2 */
+  --card-foreground: 127 29 29; /* #7f1d1d */
+  --popover: 254 226 226; /* #fee2e2 */
+  --popover-foreground: 127 29 29; /* #7f1d1d */
+  --muted: 252 165 165; /* #fca5a5 */
+  --muted-foreground: 185 28 28; /* #b91c1c */
+  --border: 252 165 165; /* #fca5a5 */
+  --input: 254 226 226; /* #fee2e2 */
+  --ring: 220 38 38; /* #dc2626 */
+  --destructive: 185 28 28; /* #b91c1c */
+  --destructive-foreground: 254 242 242; /* #fef2f2 */
+  --success: 21 128 61; /* #15803d */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 220 38 38; /* #dc2626 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  --gradient-secondary: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --gradient-accent: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+}
+
+.dark .theme-vibrant-red {
+  /* Dark Mode */
+  --primary: 248 113 113; /* #f87171 */
+  --primary-dark: 239 68 68; /* #ef4444 */
+  --secondary: 252 165 165; /* #fca5a5 */
+  --accent: 253 186 116; /* #fdba74 */
+  --background: 127 29 29; /* #7f1d1d */
+  --foreground: 254 226 226; /* #fee2e2 */
+  --card: 185 28 28; /* #b91c1c */
+  --card-foreground: 254 226 226; /* #fee2e2 */
+  --popover: 185 28 28; /* #b91c1c */
+  --popover-foreground: 254 226 226; /* #fee2e2 */
+  --muted: 153 27 27; /* #991b1b */
+  --muted-foreground: 248 113 113; /* #f87171 */
+  --border: 220 38 38; /* #dc2626 */
+  --input: 185 28 28; /* #b91c1c */
+  --ring: 248 113 113; /* #f87171 */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 254 226 226; /* #fee2e2 */
+  --success: 34 197 94; /* #22c55e */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 248 113 113; /* #f87171 */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  --gradient-secondary: linear-gradient(135deg, #fca5a5 0%, #f87171 100%);
+  --gradient-accent: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
+}
+
+/* ================================
+   THEME 13: COOL TEAL
+   ================================ */
+.theme-cool-teal {
+  /* Light Mode */
+  --primary: 20 184 166; /* #14b8a6 */
+  --primary-dark: 15 118 110; /* #0f766e */
+  --secondary: 6 182 212; /* #06b6d4 */
+  --accent: 124 58 237; /* #7c3aed */
+  --background: 240 253 250; /* #f0fdfa */
+  --foreground: 19 78 74; /* #134e4a */
+  --card: 204 251 241; /* #ccfbf1 */
+  --card-foreground: 19 78 74; /* #134e4a */
+  --popover: 204 251 241; /* #ccfbf1 */
+  --popover-foreground: 19 78 74; /* #134e4a */
+  --muted: 153 246 228; /* #99f6e4 */
+  --muted-foreground: 17 94 89; /* #115e59 */
+  --border: 94 234 212; /* #5eead4 */
+  --input: 204 251 241; /* #ccfbf1 */
+  --ring: 20 184 166; /* #14b8a6 */
+  --destructive: 185 28 28; /* #b91c1c */
+  --destructive-foreground: 240 253 250; /* #f0fdfa */
+  --success: 20 184 166; /* #14b8a6 */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 14 165 233; /* #0ea5e9 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
+  --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  --gradient-accent: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+.dark .theme-cool-teal {
+  /* Dark Mode */
+  --primary: 45 212 191; /* #2dd4bf */
+  --primary-dark: 20 184 166; /* #14b8a6 */
+  --secondary: 94 234 212; /* #5eead4 */
+  --accent: 167 139 250; /* #a78bfa */
+  --background: 19 78 74; /* #134e4a */
+  --foreground: 204 251 241; /* #ccfbf1 */
+  --card: 17 94 89; /* #115e59 */
+  --card-foreground: 204 251 241; /* #ccfbf1 */
+  --popover: 17 94 89; /* #115e59 */
+  --popover-foreground: 204 251 241; /* #ccfbf1 */
+  --muted: 15 118 110; /* #0f766e */
+  --muted-foreground: 94 234 212; /* #5eead4 */
+  --border: 20 184 166; /* #14b8a6 */
+  --input: 17 94 89; /* #115e59 */
+  --ring: 45 212 191; /* #2dd4bf */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 204 251 241; /* #ccfbf1 */
+  --success: 45 212 191; /* #2dd4bf */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 56 189 248; /* #38bdf8 */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%);
+  --gradient-secondary: linear-gradient(135deg, #5eead4 0%, #2dd4bf 100%);
+  --gradient-accent: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+}
+
+/* ================================
+   THEME 14: CLASSIC WHITE
+   ================================ */
+.theme-classic-white {
+  /* Light Mode */
+  --primary: 31 41 55; /* #1f2937 */
+  --primary-dark: 17 24 39; /* #111827 */
+  --secondary: 107 114 128; /* #6b7280 */
+  --accent: 59 130 246; /* #3b82f6 */
+  --background: 255 255 255; /* #ffffff */
+  --foreground: 17 24 39; /* #111827 */
+  --card: 249 250 251; /* #f9fafb */
+  --card-foreground: 17 24 39; /* #111827 */
+  --popover: 255 255 255; /* #ffffff */
+  --popover-foreground: 17 24 39; /* #111827 */
+  --muted: 243 244 246; /* #f3f4f6 */
+  --muted-foreground: 107 114 128; /* #6b7280 */
+  --border: 229 231 235; /* #e5e7eb */
+  --input: 255 255 255; /* #ffffff */
+  --ring: 31 41 55; /* #1f2937 */
+  --destructive: 239 68 68; /* #ef4444 */
+  --destructive-foreground: 255 255 255; /* #ffffff */
+  --success: 16 185 129; /* #10b981 */
+  --warning: 245 158 11; /* #f59e0b */
+  --info: 59 130 246; /* #3b82f6 */
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  --gradient-secondary: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.dark .theme-classic-white {
+  /* Dark Mode */
+  --primary: 249 250 251; /* #f9fafb */
+  --primary-dark: 243 244 246; /* #f3f4f6 */
+  --secondary: 156 163 175; /* #9ca3af */
+  --accent: 96 165 250; /* #60a5fa */
+  --background: 17 24 39; /* #111827 */
+  --foreground: 249 250 251; /* #f9fafb */
+  --card: 31 41 55; /* #1f2937 */
+  --card-foreground: 249 250 251; /* #f9fafb */
+  --popover: 31 41 55; /* #1f2937 */
+  --popover-foreground: 249 250 251; /* #f9fafb */
+  --muted: 55 65 81; /* #374151 */
+  --muted-foreground: 156 163 175; /* #9ca3af */
+  --border: 75 85 99; /* #4b5563 */
+  --input: 31 41 55; /* #1f2937 */
+  --ring: 249 250 251; /* #f9fafb */
+  --destructive: 127 29 29; /* #7f1d1d */
+  --destructive-foreground: 249 250 251; /* #f9fafb */
+  --success: 34 211 153; /* #34d399 */
+  --warning: 251 191 36; /* #fbbf24 */
+  --info: 96 165 250; /* #60a5fa */
+  
+  /* Gradients for Dark */
+  --gradient-primary: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  --gradient-secondary: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  --gradient-accent: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+}
+
+/* ================================
+   UTILITY CLASSES FOR ALL THEMES
+   ================================ */
+
+/* Color Utility Classes */
+.bg-primary {
+  background-color: rgb(var(--primary) / <alpha-value>);
+}
+
+.bg-primary-dark {
+  background-color: rgb(var(--primary-dark) / <alpha-value>);
+}
+
+.bg-secondary {
+  background-color: rgb(var(--secondary) / <alpha-value>);
+}
+
+.bg-accent {
+  background-color: rgb(var(--accent) / <alpha-value>);
+}
+
+.bg-background {
+  background-color: rgb(var(--background) / <alpha-value>);
+}
+
+.bg-card {
+  background-color: rgb(var(--card) / <alpha-value>);
+}
+
+.text-foreground {
+  color: rgb(var(--foreground) / <alpha-value>);
+}
+
+.text-muted {
+  color: rgb(var(--muted-foreground) / <alpha-value>);
+}
+
+.border {
+  border-color: rgb(var(--border) / <alpha-value>);
+}
+
+.ring {
+  --tw-ring-color: rgb(var(--ring) / <alpha-value>);
+}
+
+/* Gradient Backgrounds */
+.bg-gradient-primary {
+  background-image: var(--gradient-primary);
+}
+
+.bg-gradient-secondary {
+  background-image: var(--gradient-secondary);
+}
+
+.bg-gradient-accent {
+  background-image: var(--gradient-accent);
+}
+
+/* Theme Transition */
+.theme-transition {
+  transition: background-color 0.3s var(--ease-default),
+              color 0.3s var(--ease-default),
+              border-color 0.3s var(--ease-default),
+              box-shadow 0.3s var(--ease-default);
+}
+
+/* Theme Specific Overrides */
+.theme-elegant {
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+.theme-minimal {
+  --radius: 0.25rem;
+  --radius-lg: 0.375rem;
+  --radius-xl: 0.5rem;
+}
+
+.theme-rounded {
+  --radius: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+}
+
+/* Accessibility */
+.high-contrast {
+  --primary: 0 0 0;
+  --primary-dark: 0 0 0;
+  --background: 255 255 255;
+  --foreground: 0 0 0;
+  --border: 0 0 0;
+}
+
+.dark .high-contrast {
+  --primary: 255 255 255;
+  --primary-dark: 255 255 255;
+  --background: 0 0 0;
+  --foreground: 255 255 255;
+  --border: 255 255 255;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .theme-transition {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .theme-professional-blue,
+  .theme-corporate-green,
+  .theme-premium-purple,
+  .theme-luxury-gold,
+  .theme-minimal-gray,
+  .theme-tech-cyan,
+  .theme-nature-green,
+  .theme-ocean-blue,
+  .theme-sunset-orange,
+  .theme-midnight-purple,
+  .theme-rose-pink,
+  .theme-vibrant-red,
+  .theme-cool-teal,
+  .theme-classic-white {
+    --primary: 0 0 0;
+    --background: 255 255 255;
+    --foreground: 0 0 0;
+    --card: 255 255 255;
+    --border: 0 0 0;
+  }
+}
