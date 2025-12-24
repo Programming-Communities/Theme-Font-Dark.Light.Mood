@@ -19,8 +19,8 @@
 - **Hybrid rendering** (SSG, SSR, ISR)
 
 ## EXISTING STRUCTURE (VALIDATED)
-```
-english.communities.pk/
+```english.communities.pk
+
 ├── ✅ app/
 │   ├── layout.tsx (Root layout with ThemeProvider)
 │   ├── page.tsx (Homepage)
@@ -71,8 +71,9 @@ english.communities.pk/
 ## MISSING FILES TO CREATE (PRIORITY ORDER)
 
 ### 1. HOOKS (CRITICAL - 11 files)
-```
+```hooks/
 hooks/
+
 ├── useWordPress.ts          # Main WordPress data fetching with SWR + caching
 ├── useComments.ts          # Nested comments with replies, validation, moderation
 ├── useReactions.ts         # 5 reaction types with animations, persistence
@@ -87,7 +88,7 @@ hooks/
 ```
 
 ### 2. SEO COMPONENTS (4 files)
-```
+```components/ui/seo/
 components/ui/seo/
 ├── Breadcrumb.tsx         # Dynamic breadcrumbs with schema markup
 ├── OpenGraph.tsx          # Open Graph + Twitter Card meta tags
@@ -96,7 +97,7 @@ components/ui/seo/
 ```
 
 ### 3. COMMON UI COMPONENTS (6 files)
-```
+```components/ui/common/
 components/ui/common/
 ├── Input.tsx              # Reusable input with validation + error states
 ├── Loader.tsx            # Loading spinners/skeletons with theme support
@@ -107,7 +108,7 @@ components/ui/common/
 ```
 
 ### 4. SKELETON LOADERS (5 files)
-```
+```components/ui/skeleton/
 components/ui/skeleton/
 ├── CardSkeleton.tsx      # Article card skeleton
 ├── ListSkeleton.tsx      # Post list skeleton
